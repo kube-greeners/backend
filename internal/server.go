@@ -16,10 +16,10 @@ func logJSONError(w http.ResponseWriter, err interface{}, code int) {
 
 func parseQueryParameters(urlQuery url.Values) (queryParameters, error) {
 	if !urlQuery.Has("interval") {
-		return queryParameters{}, errors.New("missing query parameter: interval")
+		return queryParameters{}, errors.New("Interval parameter is missing or is not valid.")
 	}
 	if !urlQuery.Has("step") {
-		return queryParameters{}, errors.New("missing query parameter: step")
+		return queryParameters{}, errors.New("Step parameter is missing or is not valid.")
 	}
 	return queryParameters{
 		namespace:    urlQuery.Get("namespace"),

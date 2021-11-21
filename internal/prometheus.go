@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/prometheus/client_golang/api"
-	"github.com/prometheus/client_golang/api/prometheus/v1"
-	"golang.org/x/net/context"
 	"os"
 	s "strings"
 	"time"
+
+	"github.com/prometheus/client_golang/api"
+	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
+	"golang.org/x/net/context"
 )
 
 type queryParameters struct {
@@ -69,7 +70,7 @@ func parseInterval(input string) (time.Duration, error) {
 		return 0, err
 	}
 	if nTokens != 2 {
-		return 0, errors.New("Invalid format for the interval string" + input)
+		return 0, errors.New("The format of interval is not valid" + input)
 	}
 	var factor time.Duration
 	switch interval {
@@ -84,7 +85,7 @@ func parseInterval(input string) (time.Duration, error) {
 	case 's':
 		factor = time.Second
 	default:
-		return 0, errors.New("Not a valid letter: " + string(interval))
+		return 0, errors.New("The format of date is not valid, valid formats are w, d, h, m, s: " + string(interval))
 	}
 	return factor * time.Duration(amount), nil
 
@@ -96,11 +97,11 @@ func (client prometheus) executeQuery(query string, parameters queryParameters) 
 	}
 	parsedInterval, err := parseInterval(parameters.timeInterval)
 	if err != nil {
-		return "", errors.New("Wrong interval: " + parameters.timeInterval + " because: " + err.Error())
+		return "", errors.New("Invalid interval parameter: " + parameters.timeInterval + " because: " + err.Error())
 	}
 	parsedStep, err := parseInterval(parameters.step)
 	if err != nil {
-		return "", errors.New("Wrong step: " + parameters.step + " because: " + err.Error())
+		return "", errors.New("Invalid step parameter: " + parameters.step + " because: " + err.Error())
 	}
 	return client.rawQuery(query, parsedInterval, parsedStep)
 }
