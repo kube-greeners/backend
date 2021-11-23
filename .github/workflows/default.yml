@@ -7,7 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    if: github.event.ref_type == 'branch'
     steps:
       - uses: actions/checkout@v2
         with:
@@ -24,3 +24,19 @@ jobs:
           build-context: .
           dockerfile: ./Dockerfile
           image-tag: ${{ env.name }}
+      # Setup gcloud CLI
+      - name: Setup GCloud CLI
+        uses: google-github-actions/setup-gcloud
+        with:
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: kube-greeners
+      - name: Patch Template
+        run: |
+          export TEMPLATE=$(cat ./k8s-template.yml)
+          ${TEMPLATE//{0}/$name} >> k8s.yml
+      - name: Deploy to K8S
+        run: |
+          kubectl -n kube-green apply k8s.yml
+
+
+
