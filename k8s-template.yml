@@ -4,16 +4,16 @@ metadata:
   name: backend-{0}
   namespace: kube-green
   labels:
-    kubegreeners.github.io/branch: "backend/{0}"
+    kubegreeners.github.io/branch: "{0}"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      name: "backend-{0}"
+      name: "{0}"
   template:
     metadata:
       labels:
-        name: "backend-{0}"
+        name: "{0}"
     spec:
       containers:
         - name: application
@@ -32,10 +32,10 @@ metadata:
   name: backend-{0}-svc
   namespace: kube-green
   labels:
-    kubegreeners.github.io/branch: "backend/{0}"
+    kubegreeners.github.io/branch: "{0}"
 spec:
   selector:
-    name: backend-{0}
+    name: {0}
   type: ClusterIP
   ports:
     - port: 8080
