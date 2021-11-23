@@ -35,7 +35,7 @@ jobs:
           echo ${TEMPLATE//{0}/$name} >> k8s.yml
       - name: Deploy to K8S
         run: |
-          kubectl -n kube-green apply k8s.yml
+          kubectl -n kube-green apply -f k8s.yml
 
 
 
