@@ -12,11 +12,11 @@ jobs:
         with:
           submodules: recursive
       - run: |
-          echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' |  grep -E 'kg-\d+' -o )" >> $GITHUB_ENV
+          echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' |  grep -E 'kg-[0-9]+' -o )" >> $GITHUB_ENV
           grep --version
           echo "name=$(echo ${github_ref/\//-} )"
           echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' )"
-          echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' |  grep -E 'kg-\d+' -o )"
+          echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' |  grep -E 'kg-[0-9]+' -o )"
         env:
           github_ref: ${{ github.ref_name }}
       - name: Publish Go Image

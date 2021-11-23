@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: |
-        echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' |  grep -E 'kg-\d+' -o )" >> $GITHUB_ENV
+        echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' |  grep -E 'kg-[0-9]+' -o )" >> $GITHUB_ENV
       env:
         github_ref: ${{ github.ref_name }}
     - name: Setup GCloud CLI
