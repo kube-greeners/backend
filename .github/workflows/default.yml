@@ -35,6 +35,7 @@ jobs:
           echo ${TEMPLATE//{0}/$name} >> k8s.yml
       - name: Deploy to K8S
         run: |
+          gcloud container clusters get-credentials test-cluster --zone=europe-west1-b --project=kube-greeners
           echo $(kubectl get nodes)
           kubectl -n kube-green apply -f k8s.yml
 
