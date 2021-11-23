@@ -41,9 +41,6 @@ jobs:
           echo $(kubectl get nodes)
           cat k8s.yml
           kubectl -n kube-green apply -f k8s.yml
-        with:
-          name: k8s-config
-          path: k8s.yml
 
 
 
