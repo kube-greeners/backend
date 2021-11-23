@@ -1,0 +1,23 @@
+name: Push Docker Images
+
+on:
+  push:
+    branches: [ feature/*, master, bugfix/*, stylefix/*, dev, ci/* ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Publish Go Image
+        uses: VaultVulp/gp-docker-action@1.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          image-name: backend
+          build-context: .
+          dockerfile: ./Dockerfile
+          image-tag: ${{ github.ref_name }}
