@@ -33,10 +33,8 @@ jobs:
         run: |
           export TEMPLATE=$(cat ./k8s-template.yml)
           echo ${TEMPLATE//{0}/$name} >> k8s.yml
-          echo $name >> name.txt
-        with:
-          name: name
-          path: name.txt
+          echo $name
+
       - name: Deploy to K8S
         run: |
           gcloud container clusters get-credentials test-cluster --zone=europe-west1-b --project=kube-greeners
