@@ -20,7 +20,7 @@ spec:
           image: ghcr.io/kube-greeners/backend/backend:{0}
           env:
             - name: PROMETHEUS_URL
-              value:  prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090
+              value: http://prometheus-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090
             - name: SERVE_ADDRESS
               value: 0.0.0.0:8080
           ports:
