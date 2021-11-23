@@ -4,7 +4,6 @@ on:
     branches: [ feature/*, master, bugfix/*, stylefix/*, dev, ci/* ]
 jobs:
   delete:
-    if: github.event.ref_type == 'branch'
     runs-on: ubuntu-latest
     steps:
     - name: Setup GCloud CLI
