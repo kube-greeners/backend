@@ -13,6 +13,9 @@ jobs:
           submodules: recursive
       - run: |
           echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' |  grep -E 'kg-\d+' -o )" >> $GITHUB_ENV
+          grep --version
+          echo "name=$(echo ${github_ref/\//-} )"
+          echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' )"
           echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' |  grep -E 'kg-\d+' -o )"
         env:
           github_ref: ${{ github.ref_name }}
