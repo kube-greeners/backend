@@ -16,4 +16,4 @@ jobs:
         service_account_key: ${{ secrets.GKE_SA_KEY }}
         project_id: kube-greeners
     - name: Delete resources
-      run: kubectl -n kube-green delete -l ${name}
+      run: kubectl -n backend delete -l ${name}

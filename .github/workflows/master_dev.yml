@@ -34,7 +34,7 @@ jobs:
       - name: Deploy to K8S
         run: |
           gcloud container clusters get-credentials test-cluster --zone=europe-west1-b --project=kube-greeners
-          kubectl -n kube-green apply -f k8s.yml
+          kubectl -n backend apply -f k8s.yml
 
 
 
