@@ -9,9 +9,9 @@ import (
 	"os"
 )
 
-func logJSONError(w http.ResponseWriter, err interface{}, code int) {
+func logJSONError(w http.ResponseWriter, err error, code int) {
 	w.WriteHeader(code)
-	_ = json.NewEncoder(w).Encode(err)
+	_ = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
 }
 
 func parseQueryParameters(urlQuery url.Values) (queryParameters, error) {
@@ -51,7 +51,7 @@ func handlerFactory(query string, prometheusClient prometheus) func(w http.Respo
 func Server() {
 	prometheusClient, err := prometheusClient()
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 	for path := range queryDict {
 		http.HandleFunc("/"+path, handlerFactory(queryDict[path], prometheusClient))
@@ -62,6 +62,6 @@ func Server() {
 	}
 	err = http.ListenAndServe(address, nil)
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 }
