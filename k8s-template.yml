@@ -38,7 +38,7 @@ spec:
     name: {0}
   type: ClusterIP
   ports:
-    - port: 8080
-      targetPort: 80
+    - port: 80
+      targetPort: 8080
       name: http
 ---

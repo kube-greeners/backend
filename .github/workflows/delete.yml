@@ -1,7 +1,7 @@
 name: Remove from K8S
 on:
   delete:
-    branches: [ feature/*, master, bugfix/*, stylefix/*, dev, ci/* ]
+    branches: [ feature/*, bugfix/*, stylefix/*, ci/* ]
 jobs:
   delete:
     runs-on: ubuntu-latest
