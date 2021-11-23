@@ -13,6 +13,7 @@ jobs:
           submodules: recursive
       - run: |
           echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' |  grep -E 'kg-\d+' -o )" >> $GITHUB_ENV
+          echo $GITHUB_ENV
         env:
           github_ref: ${{ github.ref_name }}
       - name: Publish Go Image
