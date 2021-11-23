@@ -25,6 +25,7 @@ spec:
               value: 0.0.0.0:8080
           ports:
             - containerPort: 8080
+          imagePullPolicy: Always
 ---
 apiVersion: v1
 kind: Service
