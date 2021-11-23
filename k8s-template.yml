@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-{0}
+  name: {0}
   namespace: kube-green
   labels:
     kubegreeners.github.io/branch: "{0}"
@@ -29,7 +29,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-{0}-svc
+  name: {0}-svc
   namespace: kube-green
   labels:
     kubegreeners.github.io/branch: "{0}"
