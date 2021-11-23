@@ -26,7 +26,7 @@ jobs:
           image-tag: ${{ env.name }}
       # Setup gcloud CLI
       - name: Setup GCloud CLI
-        uses: google-github-actions/setup-gcloud
+        uses: google-github-actions/setup-gcloud@v0.2.0
         with:
           service_account_key: ${{ secrets.GKE_SA_KEY }}
           project_id: kube-greeners
