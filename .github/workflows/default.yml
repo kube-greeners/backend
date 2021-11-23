@@ -37,6 +37,7 @@ jobs:
         run: |
           gcloud container clusters get-credentials test-cluster --zone=europe-west1-b --project=kube-greeners
           echo $(kubectl get nodes)
+          cat k8s.yml
           kubectl -n kube-green apply -f k8s.yml
 
 
