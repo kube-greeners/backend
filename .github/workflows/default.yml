@@ -32,7 +32,7 @@ jobs:
       - name: Patch Template
         run: |
           export TEMPLATE=$(cat ./k8s-template.yml)
-          ${TEMPLATE//{0}/$name} >> k8s.yml
+          echo ${TEMPLATE//{0}/$name} >> k8s.yml
       - name: Deploy to K8S
         run: |
           kubectl -n kube-green apply k8s.yml
