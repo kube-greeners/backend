@@ -11,7 +11,8 @@ import (
 
 func logJSONError(w http.ResponseWriter, err error, code int) {
 	w.WriteHeader(code)
-	_ = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+	err = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+	panic(err.Error())
 }
 
 func parseQueryParameters(urlQuery url.Values) (queryParameters, error) {
@@ -43,8 +44,8 @@ func handlerFactory(query string, prometheusClient prometheus) func(w http.Respo
 			return
 		}
 		w.WriteHeader(200)
-		_, _ = fmt.Fprint(w, result)
-
+		_, err = fmt.Fprint(w, result)
+		panic(err.Error())
 	}
 }
 
