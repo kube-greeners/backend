@@ -9,7 +9,7 @@ jobs:
     - run: |
         echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' |  grep -E 'kg-[0-9]+' -o )" >> $GITHUB_ENV
       env:
-        github_ref: ${{ github.ref_name }}
+        github_ref: ${{ github.event.ref }}
     - name: Setup GCloud CLI
       uses: google-github-actions/setup-gcloud@v0.2.0
       with:
