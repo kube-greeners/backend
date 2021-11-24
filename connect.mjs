@@ -157,7 +157,7 @@ const asyncPromises = [];
 await nodeCheck();
 asyncPromises.push(...tools.map(provisionTool));
 if (argv.backend) {
-    const backendVersion = argv.backend;
+    const backendVersion = argv.backend.toLowerCase();
     asyncPromises.push(provisionBackend(backendVersion));
 } else {
     console.log(chalk.blue("Not connecting to a backend"));
