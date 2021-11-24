@@ -1,0 +1,19 @@
+name: Remove from K8S
+on:
+  delete:
+    branches: [ feature/*, bugfix/*, stylefix/*, ci/* ]
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' |  grep -E 'kg-[0-9]+' -o )" >> $GITHUB_ENV
+      env:
+        github_ref: ${{ github.ref_name }}
+    - name: Setup GCloud CLI
+      uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+        project_id: kube-greeners
+    - name: Delete resources
+      run: kubectl -n backend delete -l ${name}

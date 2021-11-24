@@ -9,9 +9,12 @@ import (
 	"os"
 )
 
-func logJSONError(w http.ResponseWriter, err interface{}, code int) {
+func logJSONError(w http.ResponseWriter, err error, code int) {
 	w.WriteHeader(code)
-	_ = json.NewEncoder(w).Encode(err)
+	err = json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+	if err != nil {
+		panic(err)
+	}
 }
 
 func parseQueryParameters(urlQuery url.Values) (queryParameters, error) {
@@ -43,8 +46,10 @@ func handlerFactory(query string, prometheusClient prometheus) func(w http.Respo
 			return
 		}
 		w.WriteHeader(200)
-		_, _ = fmt.Fprint(w, result)
-
+		_, err = fmt.Fprint(w, result)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 

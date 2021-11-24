@@ -1,0 +1,45 @@
+name: Deploy to specific ticket id
+
+on:
+  push:
+    branches: [ feature/*, bugfix/*, stylefix/*, ci/* ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - run: |
+          echo "name=$(echo ${github_ref/\//-} | tr '[:upper:]' '[:lower:]' |  grep -E 'kg-[0-9]+' -o )" >> $GITHUB_ENV
+        env:
+          github_ref: ${{ github.ref_name }}
+      - name: Publish Go Image
+        uses: VaultVulp/gp-docker-action@1.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          image-name: backend
+          build-context: .
+          dockerfile: ./Dockerfile
+          image-tag: ${{ env.name }}
+      # Setup gcloud CLI
+      - name: Setup GCloud CLI
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          project_id: kube-greeners
+      - name: Patch Template
+        run: |
+          export TEMPLATE=$(cat ./k8s-template.yml)
+          echo "${TEMPLATE//\{0\}/$name}" > k8s.yml
+
+      - name: Deploy to K8S
+        run: |
+          gcloud container clusters get-credentials test-cluster --zone=europe-west1-b --project=kube-greeners
+          kubectl -n backend apply -f k8s.yml
+          kubectl -n backend rollout restart deployment $github_ref
+
+
+
+
