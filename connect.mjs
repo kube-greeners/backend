@@ -1,12 +1,14 @@
 #!/usr/bin/env zx
-import "zx/globals"
 
 $.verbose = false;
 
 const clearLastLine = () => {
     process.stdout.moveCursor(0, -1) // up one line
     process.stdout.clearLine(1) // from cursor to end
+    // https://stackoverflow.com/questions/32938213/is-there-a-way-to-erase-the-last-line-of-output/46510907#46510907
 }
+
+const capitalize = s => s && s[0].toUpperCase() + s.slice(1) // https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
 
 const scale = async (count) => {
     await $`gcloud container clusters resize test-cluster --project kube-greeners --zone europe-west1-b --node-pool optimized-pool --num-nodes ${count} --async --quiet`;
@@ -18,6 +20,9 @@ const waitForResources = async (count) => {
     do {
         nodes = JSON.parse((await $`kubectl get nodes -o json`)).items;
         // Nodes are being created
+        if (nodes.length >= count) {
+            break;
+        }
         clearLastLine();
         console.log(`Waiting to provision enough nodes: ${nodes.length}/${count}`);
         await sleep(2000);
@@ -33,6 +38,9 @@ const waitForResources = async (count) => {
                 .filter((condition) => condition.reason === "KubeletReady" && condition.status === "True")
                 .length > 0;
         });
+        if (readyNodes.length === nodes.length) {
+            break;
+        }
         clearLastLine();
         console.log(`Waiting for nodes: ${readyNodes.length} / ${nodes.length}`);
         await sleep(2000);
@@ -50,9 +58,12 @@ const waitForResources = async (count) => {
         ])).map(JSON.parse).map(resource => resource.items).flat();
         readyWorkloads = workloads
             .filter((workload) => workload.status.replicas === workload.status.readyReplicas);
+        if (readyWorkloads.length === workloads.length) {
+            break;
+        }
         clearLastLine();
         console.log(`Waiting for workloads to be active ${readyWorkloads.length} / ${workloads.length}`);
-        await sleep(1000);
+        await sleep(2000);
     } while (readyWorkloads.length !== workloads.length);
 
     // All done, let's go
@@ -94,7 +105,7 @@ const provisionTool = async tool => {
     const podName = await $`kubectl get pod -n monitoring -l "app.kubernetes.io/name=${tool.name}" -o jsonpath="{.items[0].metadata.name}"`;
     const portForwardPromise = $`kubectl -n monitoring port-forward ${podName} ${tool.port}`;
     processPromises.push(portForwardPromise);
-    console.log(chalk.green(`${tool.name}: ${url}`));
+    console.log(chalk.green(`${capitalize(tool.name)}: ${url}`));
     if (tool.extraInfo) {
         console.log(chalk.green(tool.extraInfo));
     }
