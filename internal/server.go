@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/rs/cors"
 	"net/http"
 	"net/url"
 	"os"
@@ -58,14 +59,15 @@ func Server() {
 	if err != nil {
 		panic(err)
 	}
+	mux := http.NewServeMux()
 	for path := range queryDict {
-		http.HandleFunc("/"+path, handlerFactory(queryDict[path], prometheusClient))
+		mux.HandleFunc("/"+path, handlerFactory(queryDict[path], prometheusClient))
 	}
 	address := os.Getenv("SERVE_ADDRESS")
 	if len(address) == 0 {
 		panic("define env variable SERVE_ADDRESS")
 	}
-	err = http.ListenAndServe(address, nil)
+	err = http.ListenAndServe(address, cors.Default().Handler(mux))
 	if err != nil {
 		panic(err)
 	}
