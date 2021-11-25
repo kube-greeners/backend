@@ -89,7 +89,7 @@ const processPromises = [];
 // Monitoring tooling connection
 const tools = [{
     name: "grafana",
-    port: 3000,
+    port: 9092,
     extraInfo: `Username: admin\nPassword: test`,
 }, {
     name: "prometheus",
