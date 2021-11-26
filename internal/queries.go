@@ -12,14 +12,16 @@ const all_active_pods = "count(kube_pod_info)"
 const memory_allocation = "sum(container_memory_working_set_bytes{namespace=\"%s\"}) by (pod)"
 
 //Memory usage
-const memory_usage = "container_memory_working_set_bytes{pod_name=~"compute-.*", image!="", container_name!="POD"}"
+const memory_usage = "container_memory_working_set_bytes{pod_name=~\"compute-.*\", image!=\"\", container_name!=\"POD\"}"
+
 //CPU allocation
-const cpu_allocation = "avg(kube_pod_container_resource_limits_cpu_cores{pod=~"compute-.*"})"
+const cpu_allocation = "avg(kube_pod_container_resource_limits_cpu_cores{pod=~\"compute-.*\"})"
+
 var queryDict = map[string]string{
 	"cpu_usage":                cpu_usage,
 	"all_active_pods":          all_active_pods,
 	"active_pods_by_namespace": active_pods_by_namespace,
 	"memory_allocation":        memory_allocation,
-	"memory_usage": memory_usage,
-	"cpu_allocation": cpu_allocation
+	"memory_usage":             memory_usage,
+	"cpu_allocation":           cpu_allocation,
 }
