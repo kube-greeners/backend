@@ -9,11 +9,11 @@ const active_pods_by_namespace = "count(kube_pod_info) by (namespace)"
 const all_active_pods = "count(kube_pod_info)"
 
 //Workload Memory working
-const memory_usage = "sum(container_memory_working_set_bytes{namespace=\"%s\"}) by (pod)"
+const memory_allocation = "sum(container_memory_working_set_bytes{namespace=\"%s\"}) by (pod)"
 
 var queryDict = map[string]string{
 	"cpu_usage":                cpu_usage,
 	"all_active_pods":          all_active_pods,
 	"active_pods_by_namespace": active_pods_by_namespace,
-	"memory_usage":             memory_usage,
+	"memory_allocation":        memory_allocation,
 }
