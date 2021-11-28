@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/rs/cors"
 	"net/http"
 	"net/url"
 	"os"
+
+	"github.com/rs/cors"
 )
 
 func logJSONError(w http.ResponseWriter, err error, code int) {
@@ -35,6 +36,7 @@ func handlerFactory(query string, prometheusClient prometheus) func(w http.Respo
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		body, err := parseQueryParameters(r.URL.Query())
 		if err != nil {
