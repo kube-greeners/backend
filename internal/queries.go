@@ -17,7 +17,7 @@ const memory_allocation = "sum(container_memory_usage_bytes{namespace!=\"\"}) / 
 const memory_usage = "sum(container_memory_working_set_bytes{namespace!=\"\"}) / 1024 / 1024 / 1024"
 
 //CPU allocation
-const cpu_allocation = "avg(kube_pod_container_resource_limits_cpu_cores{})"
+const cpu_allocation = "sum(namespace_cpu:kube_pod_container_resource_requests:sum)"
 
 const cpu_usage = "sum(rate(container_cpu_usage_seconds_total[6h]))"
 
@@ -37,9 +37,6 @@ const pue_coeficient = 1.1 // GKE
 const emission_factors_coeficient = 0.000196 * 1000 * 1000 // europe-west1
 // Multiply by 1000 * 1000 because the factor is in metric tons and we want grams
 
-//co2 formula but it has problem with string and float
-//const co2_emission = cloud_provider_usage * compute_watts_hours * pue_coeficient * emission_factors_coeficient
-
 //co2 formula
 var cpu_co2_emission = fmt.Sprintf("(%s) * (%f * (%s)) * %f * %f", cpu_usage, avg_watts, cpu_utilization_per_hour, pue_coeficient, emission_factors_coeficient)
 
@@ -48,7 +45,6 @@ var memory_co2_emission = fmt.Sprintf("(%s) * %f", memory_usage, memory_coeffici
 
 var co2_emission = fmt.Sprintf("(%s + %s) * %f * %f", cpu_co2_emission, memory_co2_emission, pue_coeficient, emission_factors_coeficient)
 
-// const co2_emission = "(sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate)) * (0.71 + 0.5 * (4.26-0.71)) * (sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate) / 3600) * 1.1 * 0.000196"
 
 func decreaseAtCertainHour(startHour int, endHour int, query string, scaleCoef float32) string {
 	newQuery := fmt.Sprintf(
