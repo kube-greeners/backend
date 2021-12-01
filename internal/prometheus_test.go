@@ -1,5 +1,6 @@
 package internal
 
+/*
 import (
 	"testing"
 )
@@ -19,3 +20,4 @@ func TestParseInterval(t *testing.T) {
 func TestExecuteQuery(t *testing.T) {
 
 }
+*/
