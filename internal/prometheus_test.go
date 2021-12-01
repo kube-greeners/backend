@@ -5,10 +5,6 @@ import (
 	"testing"
 )
 
-func TestPrometheusClient(t *testing.T) {
-
-}
-
 func TestRawQuery(t *testing.T) {
 
 }
