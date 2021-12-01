@@ -26,6 +26,9 @@ spec:
           ports:
             - containerPort: 8080
           imagePullPolicy: Always
+#      initContainers:
+#        - name: downloadCM
+#          image: busybox
 ---
 apiVersion: v1
 kind: Service
