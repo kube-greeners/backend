@@ -45,7 +45,6 @@ var memory_co2_emission = fmt.Sprintf("(%s) * %f", memory_usage, memory_coeffici
 
 var co2_emission = fmt.Sprintf("(%s + %s) * %f * %f", cpu_co2_emission, memory_co2_emission, pue_coeficient, emission_factors_coeficient)
 
-
 func decreaseAtCertainHour(startHour int, endHour int, query string, scaleCoef float32) string {
 	newQuery := fmt.Sprintf(
 		"(%s * %f and  (absent(hour() < %d) or absent(hour() > %d))) or (%s and (absent(hour() > %d) or absent(hour() < %d)))",
@@ -55,6 +54,11 @@ func decreaseAtCertainHour(startHour int, endHour int, query string, scaleCoef f
 
 var co2_emission_with_kube_green = decreaseAtCertainHour(17, 6, co2_emission, 0.7)
 var saved_co2_emissions = fmt.Sprintf("(%s) - (%s)", co2_emission, co2_emission_with_kube_green)
+
+func sum_over_time_and_step(query string, time string, step string) string {
+	return fmt.Sprintf("sum_over_time((%s)[%s:%s])", query, time, step)
+}
+
 var queryDict = map[string]string{
 	"cpu_usage":                    cpu_usage,
 	"all_active_pods":              all_active_pods,
@@ -63,5 +67,5 @@ var queryDict = map[string]string{
 	"cpu_allocation":               cpu_allocation,
 	"co2_emission":                 co2_emission,
 	"co2_emission_with_kube_green": co2_emission_with_kube_green,
-	"saved_co2_emission":           saved_co2_emissions,
+	"saved_co2_emission":           sum_over_time_and_step(saved_co2_emissions, "1w", "1h"),
 }
