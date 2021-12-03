@@ -27,13 +27,13 @@ spec:
             - containerPort: 8080
           imagePullPolicy: Always
       initContainers:
-        - name: downloadCM
+        - name: download-config-maps
           image: busybox
           command: [ "/bin/sh","-c" ]
           args: [ "apk add curl; apk add python3; python3 get_frontend.py" ]
           volumeMounts:
             - mountPath: "."
-              name: {0}-python
+              name: init-py-script
               readOnly: true
       volumes:
         - name: init-py-script
