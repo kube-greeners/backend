@@ -30,7 +30,7 @@ spec:
         - name: download-config-maps
           image: alpine:3.4
           command: [ "/bin/sh","-c" ]
-          args: [ "apk add curl; apk add python3; cp /py/get_frontend.py .; python3 get_frontend.py" ]
+          args: [ "apk update; apk add curl; apk add python3; cp /py/get_frontend.py .; python3 get_frontend.py" ]
           volumeMounts:
             - mountPath: "/py"
               name: init-py-script
