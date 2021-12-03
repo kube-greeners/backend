@@ -26,6 +26,10 @@ spec:
           ports:
             - containerPort: 8080
           imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: "/static"
+              name: static
+              readOnly: true
       initContainers:
         - name: download-config-maps
           image: alpine:3.14
@@ -35,6 +39,9 @@ spec:
             - mountPath: "/py"
               name: init-py-script
               readOnly: true
+            - mountPath: "/static"
+              name: static
+              readOnly: false
       volumes:
         - name: init-py-script
           configMap:
@@ -42,6 +49,8 @@ spec:
             items:
               - key: "get_frontend.py"
                 path: "get_frontend.py"
+        - name: static
+          emptyDir: {}
 
 ---
 apiVersion: v1
