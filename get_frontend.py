@@ -23,7 +23,6 @@ command = f'curl --cacert {CACERT_PATH} --header "Authorization: Bearer {TOKEN}"
 configmaps_resp = os.popen(command).read()
 configmaps = json.loads(configmaps_resp)["items"]
 directories = {}
-print(configmaps.keys())
 for configmap in configmaps:
     if configmap["metadata"]["name"].startswith("kg-"):
         directories[configmap["metadata"]["name"]] = configmap["binaryData"]
