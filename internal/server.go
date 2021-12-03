@@ -65,12 +65,8 @@ func Server() {
 	for path := range queryDict {
 		mux.HandleFunc("/"+path, handlerFactory(queryDict[path], prometheusClient))
 	}
-	mux.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
-		writer.WriteHeader(http.StatusOK)
-		_, _ = fmt.Fprintln(writer, "Hello world!")
-	})
 	fs := http.FileServer(http.Dir("static/"))
-	mux.Handle("/*", fs)
+	mux.Handle("/", fs)
 	address := os.Getenv("SERVE_ADDRESS")
 	if len(address) == 0 {
 		panic("define env variable SERVE_ADDRESS")
