@@ -23,6 +23,7 @@ command = f'curl --cacert {CACERT_PATH} --header "Authorization: Bearer {TOKEN}"
 configmaps_resp = os.popen(command).read()
 configmaps = json.loads(configmaps_resp)["items"]
 directories = {}
+print(configmaps.keys())
 for configmap in configmaps:
     if configmap["metadata"]["name"].startswith("kg-"):
         directories[configmap["metadata"]["name"]] = configmap["binaryData"]
@@ -34,4 +35,5 @@ for name, binaryData in directories.items():
     shutil.copytree(f"{name}/build", f"static/{name}")
     shutil.rmtree(f"{name}")
     os.remove(f"{name}.tar.gz")
-
+print(os.popen("ls -al ."))
+print(os.popen("ls -al ./static"))
