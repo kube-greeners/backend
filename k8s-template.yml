@@ -30,9 +30,9 @@ spec:
         - name: download-config-maps
           image: busybox
           command: [ "/bin/sh","-c" ]
-          args: [ "apk add curl; apk add python3; python3 get_frontend.py" ]
+          args: [ "apk add curl; apk add python3; cp /py/get_frontend.py .; python3 get_frontend.py" ]
           volumeMounts:
-            - mountPath: "."
+            - mountPath: "/py"
               name: init-py-script
               readOnly: true
       volumes:
