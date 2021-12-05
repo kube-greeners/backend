@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/rs/cors"
 	"net/http"
 	"net/url"
 	"os"
+
+	"github.com/rs/cors"
 )
 
 func logJSONError(w http.ResponseWriter, err error, code int) {
