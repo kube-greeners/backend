@@ -165,6 +165,9 @@ if (argv.backend) {
 try {
     await Promise.all(asyncPromises);
 } catch (e) {
+    if (!e.stderr.includes("interrupt")) {
+        console.error(e.stderr);
+    }
     processPromises.map(process => process.kill());
 }
 
