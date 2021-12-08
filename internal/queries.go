@@ -59,6 +59,8 @@ func sum_over_time_and_step(query string, time string, step string) string {
 	return fmt.Sprintf("sum_over_time((%s)[%s:%s])", query, time, step)
 }
 
+const namespace_names = "kube_namespace_labels"
+
 var queryDict = map[string]string{
 	"cpu_usage":                    cpu_usage,
 	"all_active_pods":              all_active_pods,
@@ -68,4 +70,5 @@ var queryDict = map[string]string{
 	"co2_emission":                 co2_emission,
 	"co2_emission_with_kube_green": co2_emission_with_kube_green,
 	"saved_co2_emission":           sum_over_time_and_step(saved_co2_emissions, "1w", "1h"),
+	"namespace_names":              namespace_names,
 }
