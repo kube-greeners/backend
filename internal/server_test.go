@@ -13,20 +13,20 @@ import (
 //test template
 
 func myTestCase(urlQuery url.Values, expectedValue url.Values, t *testing.T) {
-	// output, err := parseQueryParameters(urlQuery)
-	// if err != nil {
-	// 	t.Errorf("got %v, want %v", output, expectedValue)
-	// }
-	// if output != expectedValue {
-	// 	t.Errorf("got %v, want %v", output, expectedValue)
-	// }
+	output, err := parseQueryParameters(urlQuery)
+	if err != nil {
+		t.Errorf("got %v, want %v", output, expectedValue)
+	}
+	if output != expectedValue {
+		t.Errorf("got %v, want %v", output, expectedValue)
+	}
 }
 
-// func TestParameter(t *testing.T) {
-// 	myString := [2]string{"interval", "step"}
-// 	got := parseQueryParameters("interval")
-// 	want := "interval"
-// 	if got != want {
-// 		t.Errorf("got %d want %d given, %v", got, want, myString)
-// 	}
-// }
+func TestParameter(t *testing.T) {
+	myString := [2]string{"interval", "step"}
+	got := parseQueryParameters("interval")
+	want := "interval"
+	if got != want {
+		t.Errorf("got %d want %d given, %v", got, want, myString)
+	}
+}
