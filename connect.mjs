@@ -76,7 +76,7 @@ const nodeCheck = async () => {
 
     if (nodeCount === 0) {
         console.log(chalk.red("There are no nodes ready"))
-        const requestedNodeCount = Number.parseInt(await question("How many nodes shall I provision? [3] ")) || 3;
+        const requestedNodeCount = Number.parseInt(await question("How many nodes shall I provision? [4] ")) || 4;
         console.log("Ok, this will take time, grab coffee :)");
         await scale(requestedNodeCount);
         await waitForResources(requestedNodeCount);
