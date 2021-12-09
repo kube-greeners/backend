@@ -76,7 +76,7 @@ const nodeCheck = async () => {
 
     if (nodeCount === 0) {
         console.log(chalk.red("There are no nodes ready"))
-        const requestedNodeCount = Number.parseInt(await question("How many nodes shall I provision? [3] ")) || 3;
+        const requestedNodeCount = Number.parseInt(await question("How many nodes shall I provision? [4] ")) || 4;
         console.log("Ok, this will take time, grab coffee :)");
         await scale(requestedNodeCount);
         await waitForResources(requestedNodeCount);
@@ -89,7 +89,7 @@ const processPromises = [];
 // Monitoring tooling connection
 const tools = [{
     name: "grafana",
-    port: 9092,
+    port: 3000,
     extraInfo: `Username: admin\nPassword: test`,
 }, {
     name: "prometheus",
@@ -165,6 +165,9 @@ if (argv.backend) {
 try {
     await Promise.all(asyncPromises);
 } catch (e) {
+    if (!e.stderr.includes("interrupt")) {
+        console.error(e.stderr);
+    }
     processPromises.map(process => process.kill());
 }
 

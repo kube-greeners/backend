@@ -36,6 +36,7 @@ func handlerFactory(query string, prometheusClient prometheus) func(w http.Respo
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		body, err := parseQueryParameters(r.URL.Query())
 		if err != nil {
@@ -64,6 +65,8 @@ func Server() {
 	for path := range queryDict {
 		mux.HandleFunc("/"+path, handlerFactory(queryDict[path], prometheusClient))
 	}
+	fs := http.FileServer(http.Dir("static/"))
+	mux.Handle("/", fs)
 	address := os.Getenv("SERVE_ADDRESS")
 	if len(address) == 0 {
 		panic("define env variable SERVE_ADDRESS")

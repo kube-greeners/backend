@@ -26,6 +26,32 @@ spec:
           ports:
             - containerPort: 8080
           imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: "/static"
+              name: static
+              readOnly: true
+      initContainers:
+        - name: download-config-maps
+          image: alpine:3.14
+          command: [ "/bin/sh","-c" ]
+          args: [ "apk update; apk add curl; apk add python3; cp /py/get_frontend.py .; python3 get_frontend.py" ]
+          volumeMounts:
+            - mountPath: "/py"
+              name: init-py-script
+              readOnly: true
+            - mountPath: "/static"
+              name: static
+              readOnly: false
+      volumes:
+        - name: init-py-script
+          configMap:
+            name: {0}-python
+            items:
+              - key: "get_frontend.py"
+                path: "get_frontend.py"
+        - name: static
+          emptyDir: {}
+
 ---
 apiVersion: v1
 kind: Service
