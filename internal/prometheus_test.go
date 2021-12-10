@@ -45,17 +45,3 @@ func TestParseIntervalFailing(t *testing.T) {
 	auxTestParseIntervalFailing("", t)
 	auxTestParseIntervalFailing("2p", t)
 }
-
-/*
-func TestRawQuery(t *testing.T) {
-	client, err := prometheusClient()
-	if err != nil {
-		panic(err)
-	}
-	client.rawQuery("count(kube_pod_info) by (namespace)", 3*time.Hour, 2*time.Minute)
-}
-
-func TestExecuteQuery(t *testing.T) {
-
-}
-*/
