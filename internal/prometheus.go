@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
 	s "strings"
 	"time"
 
@@ -15,7 +16,9 @@ import (
 
 type queryParameters struct {
 	namespace    string
-	timeInterval string
+	// timeInterval string
+	start string
+	end string
 	step         string
 }
 
@@ -38,13 +41,13 @@ func prometheusClient() (prometheus, error) {
 	return prometheus{api: v1.NewAPI(client)}, nil
 }
 
-func (client prometheus) rawQuery(query string, interval time.Duration, step time.Duration) (string, error) {
+func (client prometheus) rawQuery(query string, start time.Time, end time.Time, step time.Duration) (string, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	value, warning, err := client.api.QueryRange(ctx, query, v1.Range{
-		Start: time.Now().Add(-interval),
-		End:   time.Now(),
+		Start: start,
+		End:   end,
 		Step:  step,
 	})
 	if err != nil {
@@ -103,5 +106,11 @@ func (client prometheus) executeQuery(query string, parameters queryParameters) 
 	if err != nil {
 		return "", errors.New("Invalid step parameter: " + parameters.step + " because: " + err.Error())
 	}
-	return client.rawQuery(query, parsedInterval, parsedStep)
+	intStart, err := strconv.ParseInt(parameters.start, 0, 0)
+	timestampStart := time.Unix(intStart/1000, 0)
+
+	intEnd, err := strconv.ParseInt(parameters.end, 0, 0)
+	timestampEnd := time.Unix(intEnd/1000, 0)
+	return := client.rawQuery(query,timestampStart, timestampEnd, parsedStep)
+	
 }

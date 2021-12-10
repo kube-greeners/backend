@@ -11,7 +11,7 @@ const all_active_pods = "count(kube_pod_info)"
 // If you look, usage_bytes are bigger than working_set_bytes
 
 //Workload Memory working
-const memory_allocation = "sum(container_memory_usage_bytes{namespace!=\"\"}) / 1024 / 1024 / 1024" // 1GB = 1024 * 1024 * 1024 Bytes
+const memory_allocation = "sum(container_memory_usage_bytes{namespace=~\"%s\"}) / 1024 / 1024 / 1024" // 1GB = 1024 * 1024 * 1024 Bytes
 
 //Memory usage
 const memory_usage = "sum(container_memory_working_set_bytes{namespace!=\"\"}) / 1024 / 1024 / 1024"
