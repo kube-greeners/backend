@@ -40,7 +40,7 @@ func prometheusClient() (prometheus, error) {
 
 func (client prometheus) rawQuery(query string, interval time.Duration, step time.Duration) (string, error) {
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	value, warning, err := client.api.QueryRange(ctx, query, v1.Range{
 		Start: time.Now().Add(-interval),
@@ -92,8 +92,8 @@ func parseInterval(input string) (time.Duration, error) {
 }
 
 func (client prometheus) executeQuery(query string, parameters queryParameters) (string, error) {
-	if s.Contains(query, "\"%s\"") {
-		query = fmt.Sprintf(query, parameters.namespace)
+	for s.Contains(query, "\"%s\"") {
+		query = s.Replace(query, "%s", parameters.namespace, 1)
 	}
 	parsedInterval, err := parseInterval(parameters.timeInterval)
 	if err != nil {

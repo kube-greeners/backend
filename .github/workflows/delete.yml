@@ -16,4 +16,6 @@ jobs:
         service_account_key: ${{ secrets.GKE_SA_KEY }}
         project_id: kube-greeners
     - name: Delete resources
-      run: kubectl -n backend delete deploy,svc -l "kubegreeners.github.io/branch=${name}"
+      run: |
+        gcloud container clusters get-credentials test-cluster --zone=europe-west1-b --project=kube-greeners
+        kubectl -n backend delete deploy,svc -l "kubegreeners.github.io/branch=${name}"
