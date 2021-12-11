@@ -19,16 +19,8 @@ func logJSONError(w http.ResponseWriter, err error, code int) {
 }
 
 func parseQueryParameters(urlQuery url.Values) (queryParameters, error) {
-	// if !urlQuery.Has("interval") {
-	// 	return queryParameters{}, errors.New("Interval parameter is missing or is not valid.")
-	// }
-	// if !urlQuery.Has("step") {
-	// 	return queryParameters{}, errors.New("Step parameter is missing or is not valid.")
-	// }
 	return queryParameters{
 		namespace: urlQuery.Get("namespace"),
-		// timeInterval: urlQuery.Get("interval"),
-		// step:         urlQuery.Get("step"),
 	}, nil
 }
 func handlerFactory(query string, prometheusClient prometheus) func(w http.ResponseWriter, r *http.Request) {

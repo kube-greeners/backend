@@ -15,11 +15,10 @@ import (
 )
 
 type queryParameters struct {
-	namespace    string
-	// timeInterval string
-	start string
-	end string
-	step         string
+	namespace string
+	start     string
+	end       string
+	step      string
 }
 
 type prometheus struct {
@@ -98,10 +97,6 @@ func (client prometheus) executeQuery(query string, parameters queryParameters) 
 	for s.Contains(query, "\"%s\"") {
 		query = s.Replace(query, "%s", parameters.namespace, 1)
 	}
-	parsedInterval, err := parseInterval(parameters.timeInterval)
-	if err != nil {
-		return "", errors.New("Invalid interval parameter: " + parameters.timeInterval + " because: " + err.Error())
-	}
 	parsedStep, err := parseInterval(parameters.step)
 	if err != nil {
 		return "", errors.New("Invalid step parameter: " + parameters.step + " because: " + err.Error())
@@ -111,6 +106,6 @@ func (client prometheus) executeQuery(query string, parameters queryParameters) 
 
 	intEnd, err := strconv.ParseInt(parameters.end, 0, 0)
 	timestampEnd := time.Unix(intEnd/1000, 0)
-	return := client.rawQuery(query,timestampStart, timestampEnd, parsedStep)
-	
+	return client.rawQuery(query, timestampStart, timestampEnd, parsedStep)
+
 }
