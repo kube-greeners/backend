@@ -62,35 +62,6 @@ func (client prometheus) rawQuery(query string, start time.Time, end time.Time) 
 	return string(marshaledJson), nil
 }
 
-func parseInterval(input string) (time.Duration, error) {
-	var amount int
-	var interval byte
-	nTokens, err := fmt.Sscanf(input, "%d%c", &amount, &interval)
-	if err != nil {
-		return 0, err
-	}
-	if nTokens != 2 {
-		return 0, errors.New("The format of interval is not valid" + input)
-	}
-	var factor time.Duration
-	switch interval {
-	case 'd':
-		factor = time.Hour * 24
-	case 'h':
-		factor = time.Hour
-	case 'm':
-		factor = time.Minute
-	case 'w':
-		factor = time.Hour * 24 * 7
-	case 's':
-		factor = time.Second
-	default:
-		return 0, errors.New("The format of date is not valid, valid formats are w, d, h, m, s: " + string(interval))
-	}
-	return factor * time.Duration(amount), nil
-
-}
-
 func (client prometheus) executeQuery(query string, parameters queryParameters) (string, error) {
 	for s.Contains(query, "\"%s\"") {
 		query = s.Replace(query, "%s", parameters.namespace, 1)
