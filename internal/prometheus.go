@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	s "strings"
 	"time"
 
 	"github.com/prometheus/client_golang/api"
@@ -64,9 +63,9 @@ func (client prometheus) rawQuery(query string, start time.Time, end time.Time, 
 }
 
 func (client prometheus) executeQuery(query string, parameters queryParameters) (string, error) {
-	for s.Contains(query, "\"%s\"") {
-		query = s.Replace(query, "%s", parameters.namespace, 1)
-	}
+	// for s.Contains(query, "\"%s\"") {
+	// 	query = s.Replace(query, "%s", parameters.namespace, 1)
+	// }
 	fmt.Printf("the parameter %s", parameters.start)
 	intStart, err := strconv.ParseInt(parameters.start, 0, 0)
 	timestampStart := time.Unix(intStart/1000, 0)
