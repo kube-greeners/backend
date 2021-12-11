@@ -95,7 +95,7 @@ func (client prometheus) executeQuery(query string, parameters queryParameters) 
 	for s.Contains(query, "\"%s\"") {
 		query = s.Replace(query, "%s", parameters.namespace, 1)
 	}
-	fmt.Println(parameters.start)
+	fmt.Printf("the parameter %s", parameters.start)
 	intStart, err := strconv.ParseInt(parameters.start, 0, 0)
 	timestampStart := time.Unix(intStart/1000, 0)
 	if err != nil {
