@@ -3,6 +3,7 @@ package internal
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 	s "strings"
@@ -86,6 +87,7 @@ func (client prometheus) executeQuery(query string, parameters queryParameters) 
 	if step < 0 {
 		return "", errors.New("end time " + timestampEnd.String() + " is smaller than start time " + timestampStart.String())
 	}
+	fmt.Println(query)
 	return client.rawQuery(query, timestampStart, timestampEnd, time.Duration(step*time.Second.Nanoseconds()))
 
 }
