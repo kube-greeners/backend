@@ -119,7 +119,7 @@ const provisionBackend = async (backendVersion) => {
     const backendPort = "8080";
     if (backendVersion === "local") {
         process.env["SERVE_ADDRESS"] = ":" + backendPort;
-        const goPromise = $`go run cmd/server/main.go`;
+        const goPromise = ($`go run cmd/server/main.go`).pipe(process.stdout);
         processPromises.push(goPromise);
         console.log(chalk.blue(`Backend: http://localhost:${backendPort} (from local code)`));
         await goPromise;
