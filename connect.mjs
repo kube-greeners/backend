@@ -46,6 +46,7 @@ const waitForResources = async (count) => {
         await sleep(2000);
     } while (readyNodes.length !== nodes.length);
 
+    await $`kubectl delete pods --field-selector status.phase=Failed -A --ignore-not-found=true`; // Delete pods that are shutdown
 
     // Monitoring and backend deployments are ready
     let workloads;
@@ -73,16 +74,15 @@ const waitForResources = async (count) => {
 // Check if nodes are available
 const nodeCheck = async () => {
     let nodeCount = JSON.parse(await $`kubectl get nodes -o json`).items.length
-
+    let resourceCount = 1;
     if (nodeCount === 0) {
         console.log(chalk.red("There are no nodes ready"))
         const requestedNodeCount = Number.parseInt(await question("How many nodes shall I provision? [4] ")) || 4;
         console.log("Ok, this will take time, grab coffee :)");
         await scale(requestedNodeCount);
-        await waitForResources(requestedNodeCount);
-    } else {
-        await waitForResources(1); // We just want some nodes if they are already provisioned
+        resourceCount = requestedNodeCount;
     }
+    await waitForResources(resourceCount);
 }
 
 const processPromises = [];
