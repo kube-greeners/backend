@@ -10,23 +10,48 @@ import (
 //https://www.youtube.com/watch?v=sOeUf1YICSA&t=49s
 //https://betterprogramming.pub/easy-guide-to-unit-testing-in-golang-4fc1e9d96679
 
-//test template
-
-func myTestCase(urlQuery url.Values, expectedValue url.Values, t *testing.T) {
-	output, err := parseQueryParameters(urlQuery)
+func auxTestParseQueryParametersFailing(query string, t *testing.T) {
+	u, err := url.Parse(query)
 	if err != nil {
-		t.Errorf("got %v, want %v", output, expectedValue)
+		panic(err)
 	}
-	if output != expectedValue {
-		t.Errorf("got %v, want %v", output, expectedValue)
+	q := u.Query()
+	body, err := parseQueryParameters(q)
+	if err == nil {
+		t.Error("Error expected")
+	}
+	_ = body
+}
+
+func auxTestParseQueryParametersValid(query string, expectedQueryParameters queryParameters, t *testing.T) {
+	u, err := url.Parse(query)
+	if err != nil {
+		panic(err)
+	}
+	q := u.Query()
+	body, err := parseQueryParameters(q)
+	if err != nil {
+		t.Error("Error unexpected")
+	}
+	if body != expectedQueryParameters {
+		t.Error("Unexpected results")
 	}
 }
 
-func TestParameter(t *testing.T) {
-	myString := [2]string{"interval", "step"}
-	got := parseQueryParameters("interval")
-	want := "interval"
-	if got != want {
-		t.Errorf("got %d want %d given, %v", got, want, myString)
+func TestParseQueryParameters(t *testing.T) {
+	auxTestParseQueryParametersFailing("https://example.org/?a=1&a=2&b=&=3&&&&", t)
+	auxTestParseQueryParametersFailing("", t)
+
+	expectedParam := queryParameters{
+		namespace:    "ns1",
+		timeInterval: "2",
+		step:         "1",
 	}
+	auxTestParseQueryParametersValid("https://example.org/?namespace=ns1&interval=2&step=1", expectedParam, t)
+
+	expectedParam2 := queryParameters{
+		timeInterval: "2",
+		step:         "1",
+	}
+	auxTestParseQueryParametersValid("https://example.org/?interval=2&step=1", expectedParam2, t)
 }
