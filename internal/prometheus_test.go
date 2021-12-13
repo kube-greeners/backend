@@ -26,22 +26,45 @@ func auxTestParseIntervalFailing(functionParam string, t *testing.T) {
 
 }
 
-func TestParseIntervalValid(t *testing.T) {
-
+func TestParseIntervalValidDay(t *testing.T) {
 	auxTestParseIntervalValid("2d", 2*24*time.Hour, t)
+}
+
+func TestParseIntervalValidHour(t *testing.T) {
 	auxTestParseIntervalValid("4h", 4*time.Hour, t)
+}
+
+func TestParseIntervalValidMinute(t *testing.T) {
 	auxTestParseIntervalValid("1m", time.Minute, t)
+}
+
+func TestParseIntervalValidWeek(t *testing.T) {
 	auxTestParseIntervalValid("10w", 10*24*7*time.Hour, t)
+}
+
+func TestParseIntervalValidSecond(t *testing.T) {
 	auxTestParseIntervalValid("500s", 500*time.Second, t)
 }
 
-func TestParseIntervalFailing(t *testing.T) {
+func TestParseIntervalFailingNullValue(t *testing.T) {
 	auxTestParseIntervalFailing("0s", t)
+}
+func TestParseIntervalFailingNegativeValue(t *testing.T) {
 	auxTestParseIntervalFailing("-2s", t)
+}
 
+func TestParseIntervalFailingMissingValue(t *testing.T) {
 	auxTestParseIntervalFailing("s", t)
+}
+
+func TestParseIntervalFailingFloatValue(t *testing.T) {
 	auxTestParseIntervalFailing("4.5h", t)
-	auxTestParseIntervalFailing("s", t)
+}
+
+func TestParseIntervalFailingEmpty(t *testing.T) {
 	auxTestParseIntervalFailing("", t)
+}
+
+func TestParseIntervalFailingWrongFactor(t *testing.T) {
 	auxTestParseIntervalFailing("2p", t)
 }
