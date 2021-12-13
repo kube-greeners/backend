@@ -10,6 +10,7 @@ import (
 //https://www.youtube.com/watch?v=sOeUf1YICSA&t=49s
 //https://betterprogramming.pub/easy-guide-to-unit-testing-in-golang-4fc1e9d96679
 
+/// Auxiliary function to factor code for checking that the function throws an error
 func auxTestParseQueryParametersFailing(query string, t *testing.T) {
 	u, err := url.Parse(query)
 	if err != nil {
@@ -23,6 +24,7 @@ func auxTestParseQueryParametersFailing(query string, t *testing.T) {
 	_ = body
 }
 
+/// Auxiliary function to factor code for checking that the function returns the right value
 func auxTestParseQueryParametersValid(query string, expectedQueryParameters queryParameters, t *testing.T) {
 	u, err := url.Parse(query)
 	if err != nil {
@@ -38,9 +40,15 @@ func auxTestParseQueryParametersValid(query string, expectedQueryParameters quer
 	}
 }
 
-func TestParseQueryParameters(t *testing.T) {
+func TestParseQueryParametersWrongQuery(t *testing.T) {
 	auxTestParseQueryParametersFailing("https://example.org/?a=1&a=2&b=&=3&&&&", t)
+}
+
+func TestParseQueryParametersEmptyQuery(t *testing.T) {
 	auxTestParseQueryParametersFailing("", t)
+}
+
+func TestParseQueryParametersThreeParam(t *testing.T) {
 
 	expectedParam := queryParameters{
 		namespace:    "ns1",
@@ -48,7 +56,9 @@ func TestParseQueryParameters(t *testing.T) {
 		step:         "1",
 	}
 	auxTestParseQueryParametersValid("https://example.org/?namespace=ns1&interval=2&step=1", expectedParam, t)
+}
 
+func TestParseQueryParametersTwoParam(t *testing.T) {
 	expectedParam2 := queryParameters{
 		timeInterval: "2",
 		step:         "1",
