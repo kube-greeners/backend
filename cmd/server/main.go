@@ -1,6 +1,8 @@
 package main
 
-import "backend/internal"
+import (
+	"backend/internal"
+)
 
 func main() {
 	internal.Server()
