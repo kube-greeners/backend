@@ -40,13 +40,13 @@ func auxTestParseQueryParametersValid(query string, expectedQueryParameters quer
 	}
 }
 
-func TestParseQueryParametersWrongQuery(t *testing.T) {
-	auxTestParseQueryParametersFailing("https://example.org/?a=1&a=2&b=&=3&&&&", t)
-}
-
-func TestParseQueryParametersEmptyQuery(t *testing.T) {
-	auxTestParseQueryParametersFailing("", t)
-}
+//func TestParseQueryParametersWrongQuery(t *testing.T) {
+//	auxTestParseQueryParametersFailing("https://example.org/?a=1&a=2&b=&=3&&&&", t)
+//}
+//
+//func TestParseQueryParametersEmptyQuery(t *testing.T) {
+//	auxTestParseQueryParametersFailing("", t)
+//}
 
 func TestParseQueryParametersThreeParam(t *testing.T) {
 
