@@ -16,7 +16,7 @@ const memory_usage = "sum(container_memory_working_set_bytes{namespace=~\"%s\"})
 //CPU allocation
 const cpu_allocation = "sum(namespace_cpu:kube_pod_container_resource_requests:sum{namespace=~\"%s\"})"
 
-const cpu_usage = "sum(rate(container_cpu_usage_seconds_total[6h]{namespace=~\"%s\"}))"
+const cpu_usage = "sum(rate(container_cpu_usage_seconds_total{namespace=~\"%s\"}[6h]))"
 
 //calculate cloud energy conversion factors [kWh]
 // https://github.com/cloud-carbon-footprint/cloud-carbon-footprint/blob/trunk/packages/gcp/src/domain/GcpFootprintEstimationConstants.ts
@@ -27,7 +27,7 @@ const avg_cpu_utilization = 0.5 //50%
 const avg_watts = min_watts_coeficient + avg_cpu_utilization*(max_watts_coeficient-min_watts_coeficient)
 
 // Utilization of CPU time for the last week summed up
-const cpu_utilization_per_hour = "sum(avg_over_time(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=~\"%s\"}[7d])) / 3600"
+const cpu_utilization_per_hour = "sum(avg_over_time(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate[7d])) / 3600"
 
 const pue_coeficient = 1.1 // GKE
 
@@ -56,11 +56,7 @@ func sum_over_time_and_step(query string, time string, step string) string {
 	return fmt.Sprintf("sum_over_time((%s)[%s:%s])", query, time, step)
 }
 
-<<<<<<< HEAD
-const namespace_names = "sum(kube_namespace_labels) by namespace"
-=======
-const namespace_names = "sum(kube_namespace_labels) by (namespace)"
->>>>>>> dev
+const namespace_names = "kube_namespace_labels"
 
 var queryDict = map[string]string{
 	"cpu_usage":                    cpu_usage,
