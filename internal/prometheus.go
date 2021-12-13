@@ -72,6 +72,9 @@ func parseInterval(input string) (time.Duration, error) {
 	if nTokens != 2 {
 		return 0, errors.New("The format of interval is not valid" + input)
 	}
+	if amount <= 0 {
+		return 0, errors.New("The format of interval is not valid" + input)
+	}
 	var factor time.Duration
 	switch interval {
 	case 'd':
