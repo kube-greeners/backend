@@ -98,9 +98,12 @@ func parseInterval(input string) (time.Duration, error) {
 func (client prometheus) executeQuery(query string, parameters queryParameters) (string, error) {
 
 	for s.Contains(query, "\"%s\"") {
-		query = s.Replace(query, "%s", parameters.namespace, 1)
+		if parameters.namespace != "" {
+			query = s.Replace(query, "%s", parameters.namespace, 1)
+		} else {
+			query = s.Replace(query, "namespace=~\"%s\"", "namespace!=\"\"", 1)
+		}
 	}
-	// fmt.Println(parameters)
 	intStart, err := strconv.ParseInt(parameters.start, 0, 0)
 	timestampStart := time.Unix(intStart/1000, 0)
 	if err != nil {
