@@ -69,6 +69,7 @@ func Server() {
 		panic(err)
 	}
 
-	fs_swagger := http.FileServer(http.Dir("./swaggerui"))
-	http.Handle("/swaggerui/", http.StripPrefix("/swaggerui/", fs_swagger))
+	fs_swagger := http.FileServer(http.Dir("swaggerui/"))
+	mux.Handle("/", fs_swagger)
+
 }
