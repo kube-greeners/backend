@@ -34,10 +34,11 @@ for configmap in configmaps:
     if is_branch_name(cm_name):
         directories[cm_name] = configmap["binaryData"]
 
+os.mkdir("temp_")
 for name, binaryData in directories.items():
-    with open(f"{name}.tar.gz", "wb") as archive:
+    with open(f"temp_/{name}.tar.gz", "wb") as archive:
         archive.write(base64.decodebytes(bytes(binaryData['build.tar.gz'], "utf-8")))
-    shutil.unpack_archive(f"{name}.tar.gz", f"{name}")
-    shutil.copytree(f"{name}/build", f"static/{name}")
-    shutil.rmtree(f"{name}")
-    os.remove(f"{name}.tar.gz")
+    shutil.unpack_archive(f"temp_/{name}.tar.gz", f"temp_/{name}")
+    shutil.copytree(f"temp_/{name}/build", f"static/{name}")
+
+shutil.rmtree("temp_")
