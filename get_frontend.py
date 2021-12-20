@@ -23,9 +23,16 @@ command = f'curl --cacert {CACERT_PATH} --header "Authorization: Bearer {TOKEN}"
 configmaps_resp = os.popen(command).read()
 configmaps = json.loads(configmaps_resp)["items"]
 directories = {}
+
+
+def is_branch_name(name_: str) -> bool:
+    return name_.startswith("kg-") or name_ == "dev" or name_ == "master"
+
+
 for configmap in configmaps:
-    if configmap["metadata"]["name"].startswith("kg-"):
-        directories[configmap["metadata"]["name"]] = configmap["binaryData"]
+    cm_name = configmap["metadata"]["name"]
+    if is_branch_name(cm_name):
+        directories[cm_name] = configmap["binaryData"]
 
 for name, binaryData in directories.items():
     with open(f"{name}.tar.gz", "wb") as archive:
@@ -34,5 +41,3 @@ for name, binaryData in directories.items():
     shutil.copytree(f"{name}/build", f"static/{name}")
     shutil.rmtree(f"{name}")
     os.remove(f"{name}.tar.gz")
-print(os.popen("ls -al ."))
-print(os.popen("ls -al ./static"))
