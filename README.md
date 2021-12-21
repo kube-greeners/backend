@@ -67,7 +67,7 @@ This project is built with the expectancy of accompanying [kube-green](https://g
 * [Go](https://go.dev/)
 * [Prometheus](https://prometheus.io/)
 * [K8S](https://kubernetes.io/)
-* [Go CORS Handler](github.com/rs/cors)
+* [Go CORS Handler](https://github.com/rs/cors)
 * [Docker](https://www.docker.com/)
 * [kube-green](https://github.com/kube-green/kube-green)
 ##### README is based on [this](https://github.com/othneildrew/Best-README-Template)
