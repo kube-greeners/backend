@@ -55,8 +55,6 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
 This project, as a part of the Dashboard for kube-green project intends to provide the backend API for executing specific Prometheus queries and returning the results to the frontend counterpart.
 By itself this project is not that much of use and it would be better to combine it with the frontend to deploy.
 This project is developed as a part of Distributed Software Development course taught at Politecnico di Milano in academic year 2021-2022, with the proposal provided by Mia Platform.
