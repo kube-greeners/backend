@@ -1,13 +1,13 @@
 package internal
 
 import (
+	"embed"
 	"encoding/json"
 	"fmt"
+	"github.com/rs/cors"
 	"net/http"
 	"net/url"
 	"os"
-
-	"github.com/rs/cors"
 )
 
 func logJSONError(w http.ResponseWriter, err error, code int) {
@@ -49,6 +49,9 @@ func handlerFactory(query string, prometheusClient prometheus) func(w http.Respo
 	}
 }
 
+//go:embed swaggerui
+var swaggerFs embed.FS
+
 func Server() {
 	prometheusClient, err := prometheusClient()
 	if err != nil {
@@ -58,6 +61,8 @@ func Server() {
 	for path := range queryDict {
 		mux.HandleFunc("/"+path, handlerFactory(queryDict[path], prometheusClient))
 	}
+	mux.Handle("/swaggerui/", http.FileServer(http.FS(swaggerFs)))
+
 	fs := http.FileServer(http.Dir("static/"))
 	mux.Handle("/", fs)
 	address := os.Getenv("SERVE_ADDRESS")
