@@ -57,7 +57,7 @@
 
 This project, as a part of the Dashboard for kube-green project intends to provide the backend API for executing specific Prometheus queries and returning the results to the frontend counterpart.
 By itself this project is not that much of use and it would be better to combine it with the frontend to deploy.
-This project is developed as a part of Distributed Software Development course taught at Politecnico di Milano in academic year 2021-2022, with the proposal provided by Mia Platform.
+This project is developed as a part of Distributed Software Development course taught at Politecnico di Milano and Mälardalen University in academic year 2021-2022, with the proposal provided by Mia Platform.
 This project is built with the expectancy of accompanying [kube-green](https://github.com/kube-green/kube-green). 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -234,6 +234,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 * Ragnhild Kleiven [@RagnhildK](https://github.com/RagnhildK)
 * Hanna Torjusen [@hanntorj](https://github.com/hanntorj)
 * Marija Popovic [@marijapopovic28](https://github.com/marijapopovic28)
+* Amila Cizmic [@amilacizmic](https://github.com/amilacizmic)
 #### Acknowledgements:
 We would like to thank:
 * Malvina Latifaj and Samuele Giussani for their assistance and feedback through this project and for sharing this journey with us.
