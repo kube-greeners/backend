@@ -70,7 +70,7 @@ This project is built with the expectancy of accompanying [kube-green](https://g
 * [Go CORS Handler](https://github.com/rs/cors)
 * [Docker](https://www.docker.com/)
 * [kube-green](https://github.com/kube-green/kube-green)
-##### README is based on [this](https://github.com/othneildrew/Best-README-Template)
+##### README is based on [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Getting Started
