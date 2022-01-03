@@ -21,6 +21,9 @@ const cpu_usage = "sum(rate(container_cpu_usage_seconds_total{namespace=~\"%s\"}
 // return 1 when kube-green is not running, empty otherwise
 const kg_not_running = "absent(max(kube_green_replicas_sleeping)>0)"
 
+// number of hours kube-green was not running over the past week (out of 168)
+const number_hours_kg_not_running_over_1w = "sum_over_time(absent(max(kube_green_replicas_sleeping)>0)[1w:1h])"
+
 //calculate cloud energy conversion factors [kWh]
 // https://github.com/cloud-carbon-footprint/cloud-carbon-footprint/blob/trunk/packages/gcp/src/domain/GcpFootprintEstimationConstants.ts
 const min_watts_coeficient = 0.71
@@ -59,22 +62,15 @@ var memory_co2_emission_no_kg = fmt.Sprintf("(%s) * %f", getResourceAmountWithou
 var co2_emission_no_kg = fmt.Sprintf("(%s + %s) * %f * %f", cpu_co2_emission_no_kg, memory_co2_emission_no_kg, pue_coeficient, emission_factors_coeficient)
 
 ///////////////////
-/*
-func decreaseAtCertainHour(startHour int, endHour int, query string, scaleCoef float32) string {
-	newQuery := fmt.Sprintf(
-		"(%s * %f and  (absent(hour() < %d) or absent(hour() > %d))) or (%s and (absent(hour() > %d) or absent(hour() < %d)))",
-		query, scaleCoef, startHour, endHour, query, startHour, endHour)
-	return newQuery
-}
-*/
-//var co2_emission_with_kube_green = decreaseAtCertainHour(17, 6, co2_emission, 0.7)
-//var saved_co2_emissions = fmt.Sprintf("(%s) - (%s)", co2_emission, co2_emission_with_kube_green)
 
 func sum_over_time_and_step(query string, time string, step string) string {
 	return fmt.Sprintf("sum_over_time((%s)[%s:%s])", query, time, step)
 }
 
 const namespace_names = "sum(kube_namespace_labels) by (namespace)"
+
+var estimmated_co2_emission_no_kg = fmt.Sprintf("(%s) * 168 / (%s)", sum_over_time_and_step(co2_emission, "1w", "1h"), number_hours_kg_not_running_over_1w)
+var saved_co2_emission = fmt.Sprintf("(%s) - (%s)", co2_emission, estimmated_co2_emission_no_kg)
 
 var queryDict = map[string]string{
 	"cpu_usage":                    cpu_usage,
@@ -84,6 +80,6 @@ var queryDict = map[string]string{
 	"cpu_allocation":               cpu_allocation,
 	"co2_emission":                 co2_emission,
 	"co2_emission_with_kube_green": co2_emission,
-	"saved_co2_emission":           sum_over_time_and_step(co2_emission, "1w", "1h"),
+	"saved_co2_emission":           saved_co2_emission,
 	"namespace_names":              namespace_names,
 }
