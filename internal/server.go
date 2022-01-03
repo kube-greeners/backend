@@ -4,10 +4,11 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
-	"github.com/rs/cors"
 	"net/http"
 	"net/url"
 	"os"
+
+	"github.com/rs/cors"
 )
 
 func logJSONError(w http.ResponseWriter, err error, code int) {
@@ -74,7 +75,7 @@ func Server() {
 		panic(err)
 	}
 
-	fs_swagger := http.FileServer(http.Dir("swaggerui/"))
+	fs_swagger := http.FileServer(http.Dir("internal/swaggerui/"))
 	mux.Handle("/", fs_swagger)
 
 }

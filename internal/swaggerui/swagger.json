@@ -14,173 +14,163 @@
     }
   },
   "host": "",
-  "basePath": "/v1",
-  "tags": [
-    {
-      "name": "kube-green",
-      "description": "Make your k8s clusters more green",
-      "externalDocs": {
-        "description": "Find out more",
-        "url": "https://mia-platform.eu/"
-      }
+  "basePath": "/",
+  "tags": [{
+    "name": "kube-green",
+    "description": "Make your k8s clusters more green",
+    "externalDocs": {
+      "description": "Find out more",
+      "url": "https://github.com/kube-green"
     }
-  ],
+  }],
   "schemes": [
     "https",
     "http"
   ],
   "paths": {
     "/cpu_usage": {
-        "summary": "CPU usage",
-        "description": "Get CPU usage",
-        "operationId": "getCpuUsage",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "namespace",
-            "in": "query",
-            "description": "name of namespace",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "description": "Start timestamp (unix timestamp in milliseconds)",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "description": "End timestamp (unix timestamp in milliseconds)",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array"
-            }
-          },
-          "400": {
-            "description": "Invalid status value"
-          }
+      "summary": "CPU usage",
+      "description": "Get CPU usage",
+      "operationId": "getCpuUsage",
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [{
+          "name": "namespace",
+          "in": "query",
+          "description": "name of namespace",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "start",
+          "in": "query",
+          "description": "Start timestamp (unix timestamp in milliseconds)",
+          "required": true,
+          "type": "integer",
+          "format": "int64"
+        },
+        {
+          "name": "end",
+          "in": "query",
+          "description": "End timestamp (unix timestamp in milliseconds)",
+          "required": true,
+          "type": "integer",
+          "format": "int64"
         }
-      },
-   
+      ],
+      "responses": {
+        "200": {
+          "description": "successful operation",
+          "schema": {
+            "type": "array"
+          }
+        },
+        "400": {
+          "description": "Invalid status value"
+        }
+      }
+    },
+
     "/all_active_pods": {
-        "summary": "All Active Pods",
-        "description": "Get All Active Pods",
-        "operationId": "getAllActivePods",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "namespace",
-            "in": "query",
-            "description": "name of namespace",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "description": "Start timestamp (unix timestamp in milliseconds)",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "description": "End timestamp (unix timestamp in milliseconds)",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array"
-            }
-          },
-          "400": {
-            "description": "Invalid status value"
-          }
+      "summary": "All Active Pods",
+      "description": "Get All Active Pods",
+      "operationId": "getAllActivePods",
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [{
+          "name": "namespace",
+          "in": "query",
+          "description": "name of namespace",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "start",
+          "in": "query",
+          "description": "Start timestamp (unix timestamp in milliseconds)",
+          "required": true,
+          "type": "integer",
+          "format": "int64"
+        },
+        {
+          "name": "end",
+          "in": "query",
+          "description": "End timestamp (unix timestamp in milliseconds)",
+          "required": true,
+          "type": "integer",
+          "format": "int64"
         }
-      },
+      ],
+      "responses": {
+        "200": {
+          "description": "successful operation",
+          "schema": {
+            "type": "array"
+          }
+        },
+        "400": {
+          "description": "Invalid status value"
+        }
+      }
+    },
     "/memory_allocation": {
-        "summary": "Memory Allocation",
-        "description": "Get Memory Allocation",
-        "operationId": "getMemoryAllocation",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "namespace",
-            "in": "query",
-            "description": "name of namespace",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "description": "Start timestamp (unix timestamp in milliseconds)",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "end",
-            "in": "query",
-            "description": "End timestamp (unix timestamp in milliseconds)",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array"
-            }
-          },
-          "400": {
-            "description": "Invalid status value"
-          }
+      "summary": "Memory Allocation",
+      "description": "Get Memory Allocation",
+      "operationId": "getMemoryAllocation",
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [{
+          "name": "namespace",
+          "in": "query",
+          "description": "name of namespace",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "start",
+          "in": "query",
+          "description": "Start timestamp (unix timestamp in milliseconds)",
+          "required": true,
+          "type": "integer",
+          "format": "int64"
+        },
+        {
+          "name": "end",
+          "in": "query",
+          "description": "End timestamp (unix timestamp in milliseconds)",
+          "required": true,
+          "type": "integer",
+          "format": "int64"
         }
-      },
+      ],
+      "responses": {
+        "200": {
+          "description": "successful operation",
+          "schema": {
+            "type": "array"
+          }
+        },
+        "400": {
+          "description": "Invalid status value"
+        }
+      }
+    },
     "/memory_usage": {
       "get": {
         "summary": "Memory Usage",
         "description": "Get Memory Usage",
         "operationId": "getMemoryUsage",
         "produces": [
-          "application/xml",
           "application/json"
         ],
-        "parameters": [
-          {
+        "parameters": [{
             "name": "namespace",
             "in": "query",
             "description": "name of namespace",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
@@ -203,12 +193,27 @@
         "responses": {
           "200": {
             "description": "successful operation",
-            "schema": {
-              "type": "array"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "type": "string"
+                    },
+                    "start": {
+                      "type": "integer"
+                    },
+                    "end": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
             }
           },
           "400": {
-            "description": "Invalid status value"
+            "description": "Bad request. Invalid start or end date"
           }
         }
       }
@@ -219,15 +224,13 @@
         "description": "Get Cpu Allocation",
         "operationId": "getCpuAllocation",
         "produces": [
-          "application/xml",
           "application/json"
         ],
-        "parameters": [
-          {
+        "parameters": [{
             "name": "namespace",
             "in": "query",
             "description": "name of namespace",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
@@ -250,12 +253,27 @@
         "responses": {
           "200": {
             "description": "successful operation",
-            "schema": {
-              "type": "array"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "type": "string"
+                    },
+                    "start": {
+                      "type": "integer"
+                    },
+                    "end": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
             }
           },
           "400": {
-            "description": "Invalid status value"
+            "description": "Bad request. Invalid start or end date"
           }
         }
       }
@@ -266,15 +284,13 @@
         "description": "Get CO2 emission",
         "operationId": "getCO2Emission",
         "produces": [
-          "application/xml",
           "application/json"
         ],
-        "parameters": [
-          {
+        "parameters": [{
             "name": "namespace",
             "in": "query",
             "description": "name of namespace",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
@@ -297,12 +313,27 @@
         "responses": {
           "200": {
             "description": "successful operation",
-            "schema": {
-              "type": "array"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "type": "string"
+                    },
+                    "start": {
+                      "type": "integer"
+                    },
+                    "end": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
             }
           },
           "400": {
-            "description": "Invalid status value"
+            "description": "Bad request. Invalid start or end date"
           }
         }
       }
@@ -313,15 +344,13 @@
         "description": "Get CO2 emission",
         "operationId": "getCO2Emission",
         "produces": [
-          "application/xml",
           "application/json"
         ],
-        "parameters": [
-          {
+        "parameters": [{
             "name": "namespace",
             "in": "query",
             "description": "name of namespace",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
@@ -344,12 +373,27 @@
         "responses": {
           "200": {
             "description": "successful operation",
-            "schema": {
-              "type": "array"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "type": "string"
+                    },
+                    "start": {
+                      "type": "integer"
+                    },
+                    "end": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
             }
           },
           "400": {
-            "description": "Invalid status value"
+            "description": "Bad request. Invalid start or end date"
           }
         }
       }
@@ -360,15 +404,13 @@
         "description": "Get Saved CO2 emission",
         "operationId": "getSavedCO2Emission",
         "produces": [
-          "application/xml",
           "application/json"
         ],
-        "parameters": [
-          {
+        "parameters": [{
             "name": "namespace",
             "in": "query",
             "description": "name of namespace",
-            "required": true,
+            "required": false,
             "type": "string"
           },
           {
@@ -391,12 +433,27 @@
         "responses": {
           "200": {
             "description": "successful operation",
-            "schema": {
-              "type": "array"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "type": "string"
+                    },
+                    "start": {
+                      "type": "integer"
+                    },
+                    "end": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
             }
           },
           "400": {
-            "description": "Invalid status value"
+            "description": "Bad request. Invalid start or end date"
           }
         }
       }
@@ -407,18 +464,9 @@
         "description": "Get All Namespace names",
         "operationId": "getNamespaceNames",
         "produces": [
-          "application/xml",
           "application/json"
         ],
-        "parameters": [
-          {
-            "name": "namespace",
-            "in": "query",
-            "description": "name of namespace",
-            "required": true,
-            "type": "string"
-          },
-          {
+        "parameters": [{
             "name": "start",
             "in": "query",
             "description": "Start timestamp (unix timestamp in milliseconds)",
@@ -438,12 +486,27 @@
         "responses": {
           "200": {
             "description": "successful operation",
-            "schema": {
-              "type": "array"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "namespace": {
+                      "type": "string"
+                    },
+                    "start": {
+                      "type": "integer"
+                    },
+                    "end": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
             }
           },
           "400": {
-            "description": "Invalid status value"
+            "description": "Bad request. Invalid start or end date"
           }
         }
       }
