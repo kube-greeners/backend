@@ -75,7 +75,4 @@ func Server() {
 		panic(err)
 	}
 
-	fs_swagger := http.FileServer(http.Dir("internal/swaggerui/"))
-	mux.Handle("/", fs_swagger)
-
 }
