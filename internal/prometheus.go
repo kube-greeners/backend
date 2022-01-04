@@ -15,9 +15,10 @@ import (
 )
 
 type queryParameters struct {
-	namespace string
-	start     string
-	end       string
+	namespace     string
+	start         string
+	end           string
+	measureTiming bool
 }
 
 type prometheus struct {
@@ -39,10 +40,11 @@ func prometheusClient() (prometheus, error) {
 	return prometheus{api: v1.NewAPI(client)}, nil
 }
 
-func (client prometheus) rawQuery(query string, start time.Time, end time.Time, step time.Duration) (string, error) {
+func (client prometheus) rawQuery(query string, start time.Time, end time.Time, step time.Duration, measure bool) (string, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
+	timer := time.Now()
 	value, warning, err := client.api.QueryRange(ctx, query, v1.Range{
 		Start: start,
 		End:   end,
@@ -56,7 +58,23 @@ func (client prometheus) rawQuery(query string, start time.Time, end time.Time, 
 			println(warn)
 		}
 	}
+	diff := time.Now().Sub(timer)
 	marshaledJson, err := json.Marshal(value)
+	if measure {
+		var resultDecoded = []map[string]json.RawMessage{}
+		err := json.Unmarshal(marshaledJson, &resultDecoded)
+		if err != nil {
+			return "", err
+		}
+		resultDecoded[0]["time"], err = json.Marshal(diff.Milliseconds())
+		if err != nil {
+			return "", err
+		}
+		marshaledJson, err = json.Marshal(resultDecoded)
+		if err != nil {
+			return "", err
+		}
+	}
 	if err != nil {
 		return "", err
 	}
@@ -124,6 +142,6 @@ func (client prometheus) executeQuery(query string, parameters queryParameters) 
 		return "", errors.New("end time " + timestampEnd.String() + " is smaller than start time " + timestampStart.String())
 	}
 
-	return client.rawQuery(query, timestampStart, timestampEnd, time.Duration(step*time.Second.Nanoseconds()))
+	return client.rawQuery(query, timestampStart, timestampEnd, time.Duration(step*time.Second.Nanoseconds()), parameters.measureTiming)
 
 }
