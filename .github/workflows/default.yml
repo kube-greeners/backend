@@ -40,6 +40,11 @@ jobs:
           kubectl -n backend apply -f k8s.yml
           kubectl -n backend rollout restart deployment $github_ref
 
+      - name: Reconfigure Ingress
+        run: |
+          python3 write_ingress.py
+          kubectl apply -f ingress.json
+
 
 
 
