@@ -23,16 +23,22 @@ command = f'curl --cacert {CACERT_PATH} --header "Authorization: Bearer {TOKEN}"
 configmaps_resp = os.popen(command).read()
 configmaps = json.loads(configmaps_resp)["items"]
 directories = {}
-for configmap in configmaps:
-    if configmap["metadata"]["name"].startswith("kg-"):
-        directories[configmap["metadata"]["name"]] = configmap["binaryData"]
 
+
+def is_branch_name(name_: str) -> bool:
+    return name_.startswith("kg-") or name_ == "dev" or name_ == "master"
+
+
+for configmap in configmaps:
+    cm_name = configmap["metadata"]["name"]
+    if is_branch_name(cm_name):
+        directories[cm_name] = configmap["binaryData"]
+
+os.mkdir("temp_")
 for name, binaryData in directories.items():
-    with open(f"{name}.tar.gz", "wb") as archive:
+    with open(f"temp_/{name}.tar.gz", "wb") as archive:
         archive.write(base64.decodebytes(bytes(binaryData['build.tar.gz'], "utf-8")))
-    shutil.unpack_archive(f"{name}.tar.gz", f"{name}")
-    shutil.copytree(f"{name}/build", f"static/{name}")
-    shutil.rmtree(f"{name}")
-    os.remove(f"{name}.tar.gz")
-print(os.popen("ls -al ."))
-print(os.popen("ls -al ./static"))
+    shutil.unpack_archive(f"temp_/{name}.tar.gz", f"temp_/{name}")
+    shutil.copytree(f"temp_/{name}/build", f"static/{name}")
+
+shutil.rmtree("temp_")

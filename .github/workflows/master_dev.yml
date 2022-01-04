@@ -40,6 +40,10 @@ jobs:
         env:
           github_ref: ${{ github.ref_name }}
 
+      - name: Reconfigure Ingress
+        run: |
+          python3 write_ingress.py
+          kubectl apply -f ingress.json
 
 
 
