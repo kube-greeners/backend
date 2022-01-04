@@ -140,6 +140,7 @@ const provisionBackend = async (backendVersion) => {
 process.on('SIGINT', async () => {
     processPromises.map(process => process.kill());
     console.clear();
+/*
     const downscale = await question("Shall I downscale the cluster? [Y/n] ") || "y";
     if (downscale === "y" || downscale === "Y") {
         console.log("Ok, triggered downscale, shouldn't take long");
@@ -147,6 +148,7 @@ process.on('SIGINT', async () => {
     } else {
         console.log("Ok, cluster is as it is");
     }
+*/
     console.log("Bye!");
     process.exit(0);
 });
