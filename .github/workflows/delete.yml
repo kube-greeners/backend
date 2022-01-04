@@ -19,3 +19,9 @@ jobs:
       run: |
         gcloud container clusters get-credentials test-cluster --zone=europe-west1-b --project=kube-greeners
         kubectl -n backend delete deploy,svc -l "kubegreeners.github.io/branch=${name}"
+
+    - name: Reconfigure Ingress
+      run: |
+        python3 write_ingress.py
+        kubectl apply -f ingress.json
+
