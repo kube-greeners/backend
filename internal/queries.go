@@ -71,7 +71,7 @@ const namespace_names = "sum(kube_namespace_labels) by (namespace)"
 
 var estimmated_co2_emission_no_kg = fmt.Sprintf("(%s) * 168 / (%s)", sum_over_time_and_step(co2_emission_no_kg, "1w", "1h"), number_hours_kg_not_running_over_1w)
 var saved_co2_emission = fmt.Sprintf("(%s) - (%s)", estimmated_co2_emission_no_kg, sum_over_time_and_step(co2_emission, "1w", "1h"))
-
+var test = fmt.Sprintf("32")
 var queryDict = map[string]string{
 	"cpu_usage":                    cpu_usage,
 	"all_active_pods":              all_active_pods,
