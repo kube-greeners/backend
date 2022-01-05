@@ -19,8 +19,9 @@ const cpu_allocation = "sum(namespace_cpu:kube_pod_container_resource_requests:s
 const cpu_usage = "sum(rate(container_cpu_usage_seconds_total{namespace=~\"%s\"}[6h]))"
 
 // return 1 when kube-green is not running, empty otherwise
-//const kg_not_running = "absent(max(kube_green_replicas_sleeping{exported_namespace=~\"%s\"})>0)"
 const kg_not_running = "absent(max(kube_green_replicas_sleeping{exported_namespace=~\"%s\"})>0) unless absent(max(kube_green_replicas_sleeping{exported_namespace=~\"%s\"})==0)"
+
+// non_reliable_value represent overlaping values that distort the result
 const non_reliable_value = "absent(max(kube_green_replicas_sleeping{exported_namespace=~\"%s\"})>0) and absent(max(kube_green_replicas_sleeping{exported_namespace=~\"%s\"})==0)"
 
 //calculate cloud energy conversion factors [kWh]
