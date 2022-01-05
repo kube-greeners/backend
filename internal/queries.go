@@ -19,7 +19,7 @@ const cpu_allocation = "sum(namespace_cpu:kube_pod_container_resource_requests:s
 const cpu_usage = "sum(rate(container_cpu_usage_seconds_total{namespace=~\"%s\"}[6h]))"
 
 // return 1 when kube-green is not running, empty otherwise
-const kg_not_running = "absent(max(kube_green_replicas_sleeping{namespace=~\"%s\"})>0)"
+const kg_not_running = "absent(max(kube_green_replicas_sleeping{exported_namespace=~\"%s\"})>0)"
 
 // number of hours kube-green was not running over the past week (out of 168)
 const number_hours_kg_not_running_over_1w = "sum_over_time(absent(max(kube_green_replicas_sleeping)>0)[1w:1h])"
