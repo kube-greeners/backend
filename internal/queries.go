@@ -80,6 +80,6 @@ var queryDict = map[string]string{
 	"cpu_allocation":               cpu_allocation,
 	"co2_emission":                 co2_emission,
 	"co2_emission_with_kube_green": co2_emission,
-	"saved_co2_emission":           number_hours_kg_not_running_over_1w,
+	"saved_co2_emission":           estimmated_co2_emission_no_kg,
 	"namespace_names":              namespace_names,
 }
