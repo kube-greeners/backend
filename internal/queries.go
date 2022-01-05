@@ -19,7 +19,7 @@ const cpu_allocation = "sum(namespace_cpu:kube_pod_container_resource_requests:s
 const cpu_usage = "sum(rate(container_cpu_usage_seconds_total{namespace=~\"%s\"}[6h]))"
 
 // return 1 when kube-green is not running, empty otherwise
-const kg_not_running = "absent(max(kube_green_replicas_sleeping)>0)"
+const kg_not_running = "absent(max(kube_green_replicas_sleeping{namespace=~\"%s\"})>0)"
 
 // number of hours kube-green was not running over the past week (out of 168)
 const number_hours_kg_not_running_over_1w = "sum_over_time(absent(max(kube_green_replicas_sleeping)>0)[1w:1h])"
@@ -71,7 +71,7 @@ const namespace_names = "sum(kube_namespace_labels) by (namespace)"
 
 var estimmated_co2_emission_no_kg = fmt.Sprintf("(%s) * 168 / (%s)", sum_over_time_and_step(co2_emission_no_kg, "1w", "1h"), number_hours_kg_not_running_over_1w)
 var saved_co2_emission = fmt.Sprintf("(%s) - (%s)", estimmated_co2_emission_no_kg, sum_over_time_and_step(co2_emission, "1w", "1h"))
-var test = fmt.Sprintf("32")
+
 var queryDict = map[string]string{
 	"cpu_usage":                    cpu_usage,
 	"all_active_pods":              all_active_pods,
