@@ -2,7 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"strconv"
 )
 
 //get all running pods
@@ -74,17 +73,6 @@ var total_number_hours = fmt.Sprintf("168 - (%s)", sum_over_time_and_step(non_re
 var estimmated_co2_emission_no_kg = fmt.Sprintf("(%s) * 168 / (%s)", sum_over_time_and_step(co2_emission_no_kg, "1w", "1h"), number_hours_kg_not_running)
 var saved_co2_emission = fmt.Sprintf("(%s) - (%s)", estimmated_co2_emission_no_kg, sum_over_time_and_step(co2_emission, "1w", "1h"))
 
-func getSavedCO2Emissions() string {
-	output, err := strconv.ParseFloat(saved_co2_emission, 8)
-	if err != nil {
-		return ""
-	}
-	if output <= 0 {
-		return "0"
-	}
-	return saved_co2_emission
-}
-
 const namespace_names = "sum(kube_namespace_labels) by (namespace)"
 
 var queryDict = map[string]string{
@@ -95,6 +83,6 @@ var queryDict = map[string]string{
 	"cpu_allocation":               cpu_allocation,
 	"co2_emission":                 co2_emission,
 	"co2_emission_with_kube_green": co2_emission,
-	"saved_co2_emission":           getSavedCO2Emissions(),
+	"saved_co2_emission":           saved_co2_emission,
 	"namespace_names":              namespace_names,
 }
