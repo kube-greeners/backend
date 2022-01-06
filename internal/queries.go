@@ -68,11 +68,11 @@ func sum_over_time_and_step(query string, time string, step string) string {
 	return fmt.Sprintf("sum_over_time((%s)[%s:%s])", query, time, step)
 }
 
-var number_hours_kg_not_running = sum_over_time_and_step(kg_not_running, "2d", "30m")
-var total_number_hours = fmt.Sprintf("168 - (%s)", sum_over_time_and_step(non_reliable_value, "2d", "30m"))
+var number_hours_kg_not_running = sum_over_time_and_step(kg_not_running, "2d", "1h")
+var total_number_hours = fmt.Sprintf("168 - (%s)", sum_over_time_and_step(non_reliable_value, "2d", "1h"))
 
-var estimmated_co2_emission_no_kg = fmt.Sprintf("(%s) * 96 / (%s)", sum_over_time_and_step(co2_emission_no_kg, "2d", "30m"), number_hours_kg_not_running)
-var saved_co2_emission = fmt.Sprintf("(%s) - (%s)", estimmated_co2_emission_no_kg, sum_over_time_and_step(co2_emission, "2d", "30m"))
+var estimmated_co2_emission_no_kg = fmt.Sprintf("(%s) * 48 / (%s)", sum_over_time_and_step(co2_emission_no_kg, "2d", "1h"), number_hours_kg_not_running)
+var saved_co2_emission = fmt.Sprintf("(%s) - (%s)", estimmated_co2_emission_no_kg, sum_over_time_and_step(co2_emission, "2d", "1h"))
 
 func getSavedCO2Emissions() string {
 	output, error := strconv.ParseFloat(saved_co2_emission, 8)
