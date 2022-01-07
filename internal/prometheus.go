@@ -39,7 +39,7 @@ func prometheusClient() (prometheus, error) {
 }
 
 func (client prometheus) rawQuery(query string, start time.Time, end time.Time, step time.Duration) (string, error) {
-
+	println(query)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	value, warning, err := client.api.QueryRange(ctx, query, v1.Range{
@@ -72,12 +72,18 @@ func (client prometheus) executeQuery(query string, parameters queryParameters) 
 		}
 	}
 	intStart, err := strconv.ParseInt(parameters.start, 0, 0)
+	if intStart < 1 {
+		return "", errors.New("Invalid start date: " + parameters.start + " because: non-positive timestamp")
+	}
 	timestampStart := time.Unix(intStart/1000, 0)
 	if err != nil {
 		return "", errors.New("Invalid start date: " + parameters.start + " because: " + err.Error())
 	}
 
 	intEnd, err := strconv.ParseInt(parameters.end, 0, 0)
+	if intEnd < 1 {
+		return "", errors.New("Invalid end date: " + parameters.end + " because: non-positive timestamp")
+	}
 	timestampEnd := time.Unix(intEnd/1000, 0)
 	if err != nil {
 		return "", errors.New("Invalid end date: " + parameters.end + " because: " + err.Error())

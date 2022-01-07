@@ -100,6 +100,13 @@ func TestInvalidTimesFailQueries(t *testing.T) {
 	negativeEnd.end = "-1"
 	helperInvalidParameter(t, negativeEnd, "invalid")
 
+	wayBigStart := validParameters
+	wayBigStart.start = "9223372036854775807000"
+	helperInvalidParameter(t, wayBigStart, "invalid")
+
+	wayBigEnd := validParameters
+	wayBigEnd.end = "9223372036854775807000"
+	helperInvalidParameter(t, wayBigEnd, "invalid")
 }
 
 func TestTooCloseTimes(t *testing.T) {
@@ -142,6 +149,26 @@ func TestIntervalComputedCorrectly(t *testing.T) {
 	parameters := validParameters
 	parameters.start = strconv.FormatInt(start.UnixMilli(), 10)
 	parameters.end = strconv.FormatInt(end.UnixMilli(), 10)
+	_, _ = api.executeQuery("some_query{namespace=~\"%s\"}", parameters)
+}
+
+func TestStepIncreasesAsTimeDifferencesDo(t *testing.T) {
+	RegisterTestingT(t)
+	start := time.Now()
+	end := start.Add(3 * time.Hour)
+	parameters := validParameters
+	parameters.start = strconv.FormatInt(start.UnixMilli(), 10)
+	parameters.end = strconv.FormatInt(end.UnixMilli(), 10)
+	api := doRange(t, func(range_ v1.Range) {
+		firstStep := range_.Step
+		secondApi := doRange(t, func(range2_ v1.Range) {
+			secondStep := range2_.Step
+			Ω(secondStep).Should(BeNumerically(">", firstStep))
+		})
+		end = start.Add(5 * time.Hour * 24 * 7)
+		parameters.end = strconv.FormatInt(end.UnixMilli(), 10)
+		_, _ = secondApi.executeQuery("some_query{namespace=~\"%s\"}", parameters)
+	})
 	_, _ = api.executeQuery("some_query{namespace=~\"%s\"}", parameters)
 }
 
