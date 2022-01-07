@@ -67,7 +67,7 @@ func sum_over_time_and_step(query string, time string, step string) string {
 	return fmt.Sprintf("sum_over_time((%s)[%s:%s])", query, time, step)
 }
 
-const namespace_names = "sum(kube_namespace_labels) by (namespace)"
+const namespace_names = "sum(kube_deployment_labels) by (namespace)"
 
 var estimmated_co2_emission_no_kg = fmt.Sprintf("(%s) * 168 / (%s)", sum_over_time_and_step(co2_emission_no_kg, "1w", "1h"), number_hours_kg_not_running_over_1w)
 var saved_co2_emission = fmt.Sprintf("(%s) - (%s)", estimmated_co2_emission_no_kg, sum_over_time_and_step(co2_emission, "1w", "1h"))
