@@ -8,7 +8,8 @@
 
 <br />
 <div align="center">
-<img src="https://github.com/kube-greeners/backend/blob/dev/image/logo.png" width="260" height="250" />
+  
+<img src="https://github.com/kube-greeners/backend/blob/dev/image/logo.png" width="250" height="250" />
 <h3 align="center">kube-green Dashboard Backend</h3>
 
   <p align="center">
