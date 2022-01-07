@@ -3,7 +3,6 @@ package internal
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"os"
 	"strconv"
 	s "strings"
@@ -15,9 +14,10 @@ import (
 )
 
 type queryParameters struct {
-	namespace string
-	start     string
-	end       string
+	namespace     string
+	start         string
+	end           string
+	measureTiming bool
 }
 
 type prometheus struct {
@@ -39,10 +39,11 @@ func prometheusClient() (prometheus, error) {
 	return prometheus{api: v1.NewAPI(client)}, nil
 }
 
-func (client prometheus) rawQuery(query string, start time.Time, end time.Time, step time.Duration) (string, error) {
+func (client prometheus) rawQuery(query string, start time.Time, end time.Time, step time.Duration, measure bool) (string, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
+	timer := time.Now()
 	value, warning, err := client.api.QueryRange(ctx, query, v1.Range{
 		Start: start,
 		End:   end,
@@ -56,43 +57,27 @@ func (client prometheus) rawQuery(query string, start time.Time, end time.Time, 
 			println(warn)
 		}
 	}
+	diff := time.Now().Sub(timer)
 	marshaledJson, err := json.Marshal(value)
+	if measure {
+		var resultDecoded = []map[string]json.RawMessage{}
+		err := json.Unmarshal(marshaledJson, &resultDecoded)
+		if err != nil {
+			return "", err
+		}
+		resultDecoded[0]["time"], err = json.Marshal(diff.Milliseconds())
+		if err != nil {
+			return "", err
+		}
+		marshaledJson, err = json.Marshal(resultDecoded)
+		if err != nil {
+			return "", err
+		}
+	}
 	if err != nil {
 		return "", err
 	}
 	return string(marshaledJson), nil
-}
-
-func parseInterval(input string) (time.Duration, error) {
-	var amount int
-	var interval byte
-	nTokens, err := fmt.Sscanf(input, "%d%c", &amount, &interval)
-	if err != nil {
-		return 0, err
-	}
-	if nTokens != 2 {
-		return 0, errors.New("The format of interval is not valid" + input)
-	}
-	if amount <= 0 {
-		return 0, errors.New("The format of interval is not valid" + input)
-	}
-	var factor time.Duration
-	switch interval {
-	case 'd':
-		factor = time.Hour * 24
-	case 'h':
-		factor = time.Hour
-	case 'm':
-		factor = time.Minute
-	case 'w':
-		factor = time.Hour * 24 * 7
-	case 's':
-		factor = time.Second
-	default:
-		return 0, errors.New("The format of date is not valid, valid formats are w, d, h, m, s: " + string(interval))
-	}
-	return factor * time.Duration(amount), nil
-
 }
 
 func (client prometheus) executeQuery(query string, parameters queryParameters) (string, error) {
@@ -105,12 +90,18 @@ func (client prometheus) executeQuery(query string, parameters queryParameters) 
 		}
 	}
 	intStart, err := strconv.ParseInt(parameters.start, 0, 0)
+	if intStart < 1 {
+		return "", errors.New("Invalid start date: " + parameters.start + " because: non-positive timestamp")
+	}
 	timestampStart := time.Unix(intStart/1000, 0)
 	if err != nil {
 		return "", errors.New("Invalid start date: " + parameters.start + " because: " + err.Error())
 	}
 
 	intEnd, err := strconv.ParseInt(parameters.end, 0, 0)
+	if intEnd < 1 {
+		return "", errors.New("Invalid end date: " + parameters.end + " because: non-positive timestamp")
+	}
 	timestampEnd := time.Unix(intEnd/1000, 0)
 	if err != nil {
 		return "", errors.New("Invalid end date: " + parameters.end + " because: " + err.Error())
@@ -124,6 +115,6 @@ func (client prometheus) executeQuery(query string, parameters queryParameters) 
 		return "", errors.New("end time " + timestampEnd.String() + " is smaller than start time " + timestampStart.String())
 	}
 
-	return client.rawQuery(query, timestampStart, timestampEnd, time.Duration(step*time.Second.Nanoseconds()))
+	return client.rawQuery(query, timestampStart, timestampEnd, time.Duration(step*time.Second.Nanoseconds()), parameters.measureTiming)
 
 }
