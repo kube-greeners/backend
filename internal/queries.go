@@ -14,15 +14,15 @@ const memory_allocation = "sum(container_memory_usage_bytes{namespace=~\"%s\"}) 
 const memory_usage = "sum(container_memory_working_set_bytes{namespace=~\"%s\"}) / 1024 / 1024 / 1024"
 
 //CPU allocation
-const cpu_allocation = "sum(namespace_cpu:kube_pod_container_resource_requests:sum{namespace=~\"%s\"})"
+const cpu_allocation = "sum(namespace_cpu:kube_pod_container_resource_requests:sum{namespace=~\"%s\"}) OR on() vector(0)"
 
 const cpu_usage = "sum(rate(container_cpu_usage_seconds_total{namespace=~\"%s\"}[6h]))"
 
 // return 1 when kube-green is not running, empty otherwise
-const kg_not_running = "absent(max(kube_green_replicas_sleeping)>0)"
+const kg_not_running = "absent(max(kube_green_replicas_sleeping{exported_namespace=~\"%s\"})>0) unless absent(max(kube_green_replicas_sleeping{exported_namespace=~\"%s\"})==0)"
 
-// number of hours kube-green was not running over the past week (out of 168)
-const number_hours_kg_not_running_over_1w = "sum_over_time(absent(max(kube_green_replicas_sleeping)>0)[1w:1h])"
+// non_reliable_value represent overlaping values that distort the result
+const non_reliable_value = "absent(max(kube_green_replicas_sleeping{exported_namespace=~\"%s\"})>0) and absent(max(kube_green_replicas_sleeping{exported_namespace=~\"%s\"})==0)"
 
 //calculate cloud energy conversion factors [kWh]
 // https://github.com/cloud-carbon-footprint/cloud-carbon-footprint/blob/trunk/packages/gcp/src/domain/GcpFootprintEstimationConstants.ts
@@ -67,10 +67,13 @@ func sum_over_time_and_step(query string, time string, step string) string {
 	return fmt.Sprintf("sum_over_time((%s)[%s:%s])", query, time, step)
 }
 
-const namespace_names = "sum(kube_namespace_labels) by (namespace)"
+var number_hours_kg_not_running = sum_over_time_and_step(kg_not_running, "1w", "1h")
+var total_number_hours = fmt.Sprintf("168 - (%s)", sum_over_time_and_step(non_reliable_value, "1w", "1h"))
 
-var estimmated_co2_emission_no_kg = fmt.Sprintf("(%s) * 168 / (%s)", sum_over_time_and_step(co2_emission_no_kg, "1w", "1h"), number_hours_kg_not_running_over_1w)
-var saved_co2_emission = fmt.Sprintf("(%s) - (%s)", estimmated_co2_emission_no_kg, sum_over_time_and_step(co2_emission, "1w", "1h"))
+var estimmated_co2_emission_no_kg = fmt.Sprintf("(%s) * 168 / (%s)", sum_over_time_and_step(co2_emission_no_kg, "1w", "1h"), number_hours_kg_not_running)
+var saved_co2_emission = fmt.Sprintf("((%s) - (%s))>0 or on() vector(0)", estimmated_co2_emission_no_kg, sum_over_time_and_step(co2_emission, "1w", "1h"))
+
+const namespace_names = "sum(kube_namespace_labels) by (namespace)"
 
 var queryDict = map[string]string{
 	"cpu_usage":                    cpu_usage,
