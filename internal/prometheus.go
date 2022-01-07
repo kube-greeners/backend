@@ -3,7 +3,6 @@ package internal
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"os"
 	"strconv"
 	s "strings"
@@ -81,38 +80,6 @@ func (client prometheus) rawQuery(query string, start time.Time, end time.Time, 
 	return string(marshaledJson), nil
 }
 
-func parseInterval(input string) (time.Duration, error) {
-	var amount int
-	var interval byte
-	nTokens, err := fmt.Sscanf(input, "%d%c", &amount, &interval)
-	if err != nil {
-		return 0, err
-	}
-	if nTokens != 2 {
-		return 0, errors.New("The format of interval is not valid" + input)
-	}
-	if amount <= 0 {
-		return 0, errors.New("The format of interval is not valid" + input)
-	}
-	var factor time.Duration
-	switch interval {
-	case 'd':
-		factor = time.Hour * 24
-	case 'h':
-		factor = time.Hour
-	case 'm':
-		factor = time.Minute
-	case 'w':
-		factor = time.Hour * 24 * 7
-	case 's':
-		factor = time.Second
-	default:
-		return 0, errors.New("The format of date is not valid, valid formats are w, d, h, m, s: " + string(interval))
-	}
-	return factor * time.Duration(amount), nil
-
-}
-
 func (client prometheus) executeQuery(query string, parameters queryParameters) (string, error) {
 
 	for s.Contains(query, "\"%s\"") {
@@ -123,12 +90,18 @@ func (client prometheus) executeQuery(query string, parameters queryParameters) 
 		}
 	}
 	intStart, err := strconv.ParseInt(parameters.start, 0, 0)
+	if intStart < 1 {
+		return "", errors.New("Invalid start date: " + parameters.start + " because: non-positive timestamp")
+	}
 	timestampStart := time.Unix(intStart/1000, 0)
 	if err != nil {
 		return "", errors.New("Invalid start date: " + parameters.start + " because: " + err.Error())
 	}
 
 	intEnd, err := strconv.ParseInt(parameters.end, 0, 0)
+	if intEnd < 1 {
+		return "", errors.New("Invalid end date: " + parameters.end + " because: non-positive timestamp")
+	}
 	timestampEnd := time.Unix(intEnd/1000, 0)
 	if err != nil {
 		return "", errors.New("Invalid end date: " + parameters.end + " because: " + err.Error())
