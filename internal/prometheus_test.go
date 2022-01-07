@@ -18,6 +18,7 @@ var validParameters = queryParameters{
 	"",
 	"1638445155310",
 	"1639654755310",
+	false,
 }
 
 func notCalled(t *testing.T) prometheus {
