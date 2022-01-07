@@ -21,9 +21,10 @@ func logJSONError(w http.ResponseWriter, err error, code int) {
 
 func parseQueryParameters(urlQuery url.Values) (queryParameters, error) {
 	return queryParameters{
-		namespace: urlQuery.Get("namespace"),
-		start:     urlQuery.Get("start"),
-		end:       urlQuery.Get("end"),
+		namespace:     urlQuery.Get("namespace"),
+		start:         urlQuery.Get("start"),
+		end:           urlQuery.Get("end"),
+		measureTiming: urlQuery.Get("measure") == "true",
 	}, nil
 }
 func handlerFactory(query string, prometheusClient prometheus) func(w http.ResponseWriter, r *http.Request) {
