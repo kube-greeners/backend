@@ -14,7 +14,7 @@ const memory_allocation = "sum(container_memory_usage_bytes{namespace=~\"%s\"}) 
 const memory_usage = "sum(container_memory_working_set_bytes{namespace=~\"%s\"}) / 1024 / 1024 / 1024"
 
 //CPU allocation
-const cpu_allocation = "sum(namespace_cpu:kube_pod_container_resource_requests:sum{namespace=~\"%s\"})"
+const cpu_allocation = "sum(namespace_cpu:kube_pod_container_resource_requests:sum{namespace=~\"%s\"}) OR on() vector(0)"
 
 const cpu_usage = "sum(rate(container_cpu_usage_seconds_total{namespace=~\"%s\"}[6h]))"
 
