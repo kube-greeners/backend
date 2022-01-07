@@ -40,7 +40,7 @@ func prometheusClient() (prometheus, error) {
 }
 
 func (client prometheus) rawQuery(query string, start time.Time, end time.Time, step time.Duration, measure bool) (string, error) {
-	println(query)
+
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	timer := time.Now()
