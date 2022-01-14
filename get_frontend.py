@@ -26,7 +26,7 @@ directories = {}
 
 
 def is_branch_name(name_: str) -> bool:
-    return name_.startswith("kg-") or name_ == "dev" or name_ == "master"
+    return name_.startswith("kg-") or name_ == "dev" or name_ == "master" or name_ == "main"
 
 
 for configmap in configmaps:
